@@ -10,6 +10,4 @@ public partial class RolGeneral
     public string NombreRol { get; set; } = null!;
 
     public string? DescripRol { get; set; }
-
-    public virtual ICollection<UsuariosGeneral> UsuariosGenerals { get; set; } = new List<UsuariosGeneral>();
 }

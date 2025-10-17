@@ -1,57 +1,37 @@
 @model enso_Certamen.Models.BoletinGeneral
 
-@{
-    ViewData["Title"] = "Editar Boletín";
-}
+<h2>Editar Boletín</h2>
 
-<h1 class="alert alert-dark text-center mt-5">
-    Editar Boletín: @Model.TituloBoletin
-</h1>
+<form asp-action="Edit" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="IdBoletin" />
 
-<div class="row">
-    <div>
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="IdBoletin" />
-
-            <div class="form-group">
-                <label asp-for="TituloBoletin" class="control-label"></label>
-                <input asp-for="TituloBoletin" class="form-control" />
-                <span asp-validation-for="TituloBoletin" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="DescripcionBoletin" class="control-label"></label>
-                <textarea asp-for="DescripcionBoletin" class="form-control" rows="4"></textarea>
-                <span asp-validation-for="DescripcionBoletin" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="FechaBoletin" class="control-label"></label>
-                <input asp-for="FechaBoletin" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" class="form-control" />
-                <span asp-validation-for="FechaBoletin" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="IdNoticia" class="control-label"></label>
-                <select asp-for="IdNoticia" class="form-control" asp-items="ViewBag.IdNoticia">
-                    <option value="">-- Selecciona una noticia --</option>
-                </select>
-                <span asp-validation-for="IdNoticia" class="text-danger"></span>
-            </div>
-
-            <div class="form-group mt-3 text-center">
-                <input type="reset" value="Limpiar" class="btn btn-outline-dark w-25" />
-                <input type="submit" value="Editar" class="btn btn-success w-25" />
-            </div>
-        </form>
+    <div class="form-group">
+        <label asp-for="TituloBoletin">Título</label>
+        <input asp-for="TituloBoletin" class="form-control" />
+        <span asp-validation-for="TituloBoletin" class="text-danger"></span>
     </div>
-</div>
 
-<div class="text-end">
-    <a asp-action="Index" class="btn btn-dark">Volver</a>
-</div>
+    <div class="form-group mt-3">
+        <label asp-for="DescripcionBoletin">Descripción</label>
+        <textarea asp-for="DescripcionBoletin" class="form-control"></textarea>
+        <span asp-validation-for="DescripcionBoletin" class="text-danger"></span>
+    </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    <div class="form-group mt-3">
+        <label asp-for="FechaBoletin">Fecha</label>
+        <input asp-for="FechaBoletin" type="date" class="form-control" />
+        <span asp-validation-for="FechaBoletin" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mt-3">
+        <label for="IdNoticia">Noticia</label>
+        <select id="IdNoticia" name="IdNoticia" asp-items="ViewBag.Noticias" class="form-control" required>
+            <option value="" disabled hidden>-- Selecciona una noticia --</option>
+        </select>
+        <span asp-validation-for="IdNoticia" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Guardar cambios</button>
+    <a asp-action="Index" class="btn btn-secondary mt-3">Volver</a>
+</form>

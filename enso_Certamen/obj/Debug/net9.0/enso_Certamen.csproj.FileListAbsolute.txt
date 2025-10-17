@@ -1,12 +1,3 @@
-/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/obj/Debug/net9.0/enso_Certamen.csproj.AssemblyReference.cache
-/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/obj/Debug/net9.0/rpswa.dswa.cache.json
-/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/obj/Debug/net9.0/enso_Certamen.GeneratedMSBuildEditorConfig.editorconfig
-/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/obj/Debug/net9.0/enso_Certamen.AssemblyInfoInputs.cache
-/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/obj/Debug/net9.0/enso_Certamen.AssemblyInfo.cs
-/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/obj/Debug/net9.0/enso_Certamen.csproj.CoreCompileInputs.cache
-/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/obj/Debug/net9.0/enso_Certamen.MvcApplicationPartsAssemblyInfo.cache
-/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/obj/Debug/net9.0/enso_Certamen.RazorAssemblyInfo.cache
-/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/obj/Debug/net9.0/enso_Certamen.RazorAssemblyInfo.cs
 /Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/bin/Debug/net9.0/appsettings.Development.json
 /Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/bin/Debug/net9.0/appsettings.json
 /Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/bin/Debug/net9.0/enso_Certamen.staticwebassets.runtime.json
@@ -254,6 +245,16 @@
 /Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/bin/Debug/net9.0/runtimes/win-x64/native/Microsoft.Data.SqlClient.SNI.dll
 /Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/bin/Debug/net9.0/runtimes/win-x86/native/Microsoft.Data.SqlClient.SNI.dll
 /Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/bin/Debug/net9.0/runtimes/win/lib/net6.0/System.Runtime.Caching.dll
+/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/obj/Debug/net9.0/enso_Certamen.csproj.AssemblyReference.cache
+/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/obj/Debug/net9.0/rpswa.dswa.cache.json
+/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/obj/Debug/net9.0/enso_Certamen.GeneratedMSBuildEditorConfig.editorconfig
+/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/obj/Debug/net9.0/enso_Certamen.AssemblyInfoInputs.cache
+/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/obj/Debug/net9.0/enso_Certamen.AssemblyInfo.cs
+/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/obj/Debug/net9.0/enso_Certamen.csproj.CoreCompileInputs.cache
+/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/obj/Debug/net9.0/enso_Certamen.MvcApplicationPartsAssemblyInfo.cache
+/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/obj/Debug/net9.0/enso_Certamen.RazorAssemblyInfo.cache
+/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/obj/Debug/net9.0/enso_Certamen.RazorAssemblyInfo.cs
+/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/obj/Debug/net9.0/enso_Certamen.sourcelink.json
 /Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/obj/Debug/net9.0/rjimswa.dswa.cache.json
 /Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/obj/Debug/net9.0/rjsmrazor.dswa.cache.json
 /Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/obj/Debug/net9.0/rjsmcshtml.dswa.cache.json
@@ -334,4 +335,3 @@
 /Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/obj/Debug/net9.0/enso_Certamen.pdb
 /Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/obj/Debug/net9.0/enso_Certamen.genruntimeconfig.cache
 /Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/obj/Debug/net9.0/ref/enso_Certamen.dll
-/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/obj/Debug/net9.0/enso_Certamen.sourcelink.json

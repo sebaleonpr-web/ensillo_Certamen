@@ -15,7 +15,5 @@ public partial class ComentarioGeneral
 
     public DateTime FechaComentario { get; set; }
 
-    public int? IdNoticia { get; set; }
-
-    public virtual NoticiaGeneral? IdNoticiaNavigation { get; set; }
+    public int IdNoticia { get; set; }
 }

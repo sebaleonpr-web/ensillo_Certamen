@@ -13,7 +13,5 @@ public partial class SuscripcionGeneral
 
     public DateTime FechaSuscripcion { get; set; }
 
-    public int? IdBoletin { get; set; }
-
-    public virtual BoletinGeneral? IdBoletinNavigation { get; set; }
+    public int IdBoletin { get; set; }
 }

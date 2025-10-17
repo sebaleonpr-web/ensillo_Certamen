@@ -16,8 +16,4 @@ public partial class UsuariosGeneral
     public string EmailUser { get; set; } = null!;
 
     public int IdRol { get; set; }
-
-    public virtual RolGeneral IdRolNavigation { get; set; } = null!;
-
-    public virtual ICollection<NoticiaGeneral> NoticiaGenerals { get; set; } = new List<NoticiaGeneral>();
 }

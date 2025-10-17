@@ -1,126 +1,141 @@
-using enso_Certamen.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using enso_Certamen.Models;
 
-namespace boletin_general.Controllers
+namespace enso_Certamen.Controllers
 {
     public class boletin_generalController : Controller
     {
-        private readonly boletinLayonContext _context;
+        private readonly boletinLayonContext _db;
 
-        public boletin_generalController(boletinLayonContext context)
+        public boletin_generalController(boletinLayonContext db)
         {
-            _context = context;
+            _db = db;
         }
 
-        // GET: boletin_general/Index
+        // GET: /boletin_general
         public async Task<IActionResult> Index()
         {
-            // Si quieres ver el nombre de la noticia en la tabla, puedes incluir la navegación:
-            // var lista = await _context.BoletinGenerals.Include(b => b.IdNoticiaNavigation).ToListAsync();
-            // return View(lista);
-            return View(await _context.BoletinGenerals.ToListAsync());
+            var lista = await _db.BoletinGenerals
+                                 .OrderByDescending(b => b.FechaBoletin)
+                                 .ToListAsync();
+
+            return View("~/Views/boletin_general/Index.cshtml", lista);
         }
 
-        // GET: boletin_general/Create
+        // GET: /boletin_general/Create
         public IActionResult Create()
         {
-            ViewBag.IdNoticia = new SelectList(_context.NoticiaGenerals, "IdNoticia", "TituloNoticia");
-            return View();
+            ViewBag.Noticias = new SelectList(
+                _db.NoticiaGenerals
+                   .OrderBy(n => n.TituloNoticia)
+                   .Select(n => new { n.IdNoticia, n.TituloNoticia }),
+                "IdNoticia", "TituloNoticia"
+            );
+
+            return View("~/Views/boletin_general/Create.cshtml");
         }
 
-        // POST: boletin_general/Create
+        // POST: /boletin_general/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdBoletin,TituloBoletin,DescripcionBoletin,FechaBoletin,IdNoticia")] BoletinGeneral boletin_general)
+        public async Task<IActionResult> Create([Bind("TituloBoletin,DescripcionBoletin,FechaBoletin,IdNoticia")] BoletinGeneral model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _context.Add(boletin_general);
-                await _context.SaveChangesAsync();
-
-                TempData["Ok"] = "Boletín creado correctamente.";
-                return RedirectToAction(nameof(Index));
+                ViewBag.Noticias = new SelectList(
+                    _db.NoticiaGenerals
+                    .OrderBy(n => n.TituloNoticia)
+                    .Select(n => new { n.IdNoticia, n.TituloNoticia }),
+                    "IdNoticia", "TituloNoticia", model.IdNoticia
+                );
+                return View("~/Views/boletin_general/Create.cshtml", model);
             }
 
-            ViewBag.IdNoticia = new SelectList(_context.NoticiaGenerals, "IdNoticia", "TituloNoticia", boletin_general.IdNoticia);
-            return View(boletin_general);
+            // El ID ahora se genera automáticamente por la BD (IDENTITY)
+            _db.BoletinGenerals.Add(model);
+            await _db.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: boletin_general/Edit/5
-        public async Task<IActionResult> Edit(int id)
+        // GET: /boletin_general/Edit/5
+        public async Task<IActionResult> Edit(int? id)
         {
-            if (id == 0) return NotFound();
+            if (id == null) return NotFound();
 
-            var boletin_general = await _context.BoletinGenerals.FindAsync(id);
-            if (boletin_general == null) return NotFound();
+            var entidad = await _db.BoletinGenerals.FindAsync(id);
+            if (entidad == null) return NotFound();
 
-            ViewBag.IdNoticia = new SelectList(_context.NoticiaGenerals, "IdNoticia", "TituloNoticia", boletin_general.IdNoticia);
-            return View(boletin_general);
+            ViewBag.Noticias = new SelectList(
+                _db.NoticiaGenerals
+                   .OrderBy(n => n.TituloNoticia)
+                   .Select(n => new { n.IdNoticia, n.TituloNoticia }),
+                "IdNoticia", "TituloNoticia", entidad.IdNoticia
+            );
+
+            return View("~/Views/boletin_general/Edit.cshtml", entidad);
         }
 
-        // POST: boletin_general/Edit/5
+        // POST: /boletin_general/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdBoletin,TituloBoletin,DescripcionBoletin,FechaBoletin,IdNoticia")] BoletinGeneral boletin_general)
+        public async Task<IActionResult> Edit(int id, [Bind("IdBoletin,TituloBoletin,DescripcionBoletin,FechaBoletin,IdNoticia")] BoletinGeneral model)
         {
-            if (id != boletin_general.IdBoletin) return NotFound();
+            if (id != model.IdBoletin) return NotFound();
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(boletin_general);
-                    await _context.SaveChangesAsync();
-                    TempData["Ok"] = "Boletín actualizado correctamente.";
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!Exists(boletin_general.IdBoletin)) return NotFound();
-                    throw;
-                }
+                ViewBag.Noticias = new SelectList(
+                    _db.NoticiaGenerals
+                       .OrderBy(n => n.TituloNoticia)
+                       .Select(n => new { n.IdNoticia, n.TituloNoticia }),
+                    "IdNoticia", "TituloNoticia", model.IdNoticia
+                );
+                return View("~/Views/boletin_general/Edit.cshtml", model);
             }
 
-            ViewBag.IdNoticia = new SelectList(_context.NoticiaGenerals, "IdNoticia", "TituloNoticia", boletin_general.IdNoticia);
-            return View(boletin_general);
+            try
+            {
+                _db.Update(model);
+                await _db.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                var existe = await _db.BoletinGenerals.AnyAsync(b => b.IdBoletin == model.IdBoletin);
+                if (!existe) return NotFound();
+                throw;
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: boletin_general/Delete/5  -> muestra confirmación
-        public async Task<IActionResult> Delete(int id)
+        // GET: /boletin_general/Delete/5
+        public async Task<IActionResult> Delete(int? id)
         {
-            if (id == 0) return NotFound();
+            if (id == null) return NotFound();
 
-            var boletin = await _context.BoletinGenerals
-                .Include(b => b.IdNoticiaNavigation)
-                .FirstOrDefaultAsync(m => m.IdBoletin == id);
+            var entidad = await _db.BoletinGenerals.FindAsync(id);
+            if (entidad == null) return NotFound();
 
-            if (boletin == null) return NotFound();
-
-            return View(boletin);
+            return View("~/Views/boletin_general/Delete.cshtml", entidad);
         }
 
-        // POST: boletin_general/Delete/5  -> elimina
+        // POST: /boletin_general/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var boletin = await _context.BoletinGenerals.FindAsync(id);
-            if (boletin != null)
+            var entidad = await _db.BoletinGenerals.FindAsync(id);
+            if (entidad != null)
             {
-                _context.BoletinGenerals.Remove(boletin);
-                await _context.SaveChangesAsync();
-                TempData["Ok"] = "Boletín eliminado correctamente.";
+                _db.BoletinGenerals.Remove(entidad);
+                await _db.SaveChangesAsync();
             }
             return RedirectToAction(nameof(Index));
-        }
-
-        // Helper
-        private bool Exists(int id)
-        {
-            return _context.BoletinGenerals.Any(e => e.IdBoletin == id);
         }
     }
 }

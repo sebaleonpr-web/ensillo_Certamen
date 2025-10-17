@@ -1,21 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace enso_Certamen.Models;
-
-public partial class BoletinGeneral
+namespace enso_Certamen.Models
 {
-    public int IdBoletin { get; set; }
+    public partial class BoletinGeneral
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int IdBoletin { get; set; }
 
-    public string TituloBoletin { get; set; } = null!;
+        [Required]
+        public string TituloBoletin { get; set; } = null!;
 
-    public string DescripcionBoletin { get; set; } = null!;
+        [Required]
+        public string DescripcionBoletin { get; set; } = null!;
 
-    public DateTime FechaBoletin { get; set; }
+        [Required]
+        public DateTime FechaBoletin { get; set; }
 
-    public int? IdNoticia { get; set; }
-
-    public virtual NoticiaGeneral? IdNoticiaNavigation { get; set; }
-
-    public virtual ICollection<SuscripcionGeneral> SuscripcionGenerals { get; set; } = new List<SuscripcionGeneral>();
+        public int? IdNoticia { get; set; }
+    }
 }

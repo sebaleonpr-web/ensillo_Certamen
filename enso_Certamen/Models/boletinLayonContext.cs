@@ -27,6 +27,7 @@ public partial class boletinLayonContext : DbContext
 
     public virtual DbSet<UsuariosGeneral> UsuariosGenerals { get; set; }
 
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<BoletinGeneral>(entity =>
@@ -35,9 +36,11 @@ public partial class boletinLayonContext : DbContext
 
             entity.ToTable("boletinGeneral");
 
+            // ⬇️ CAMBIO CLAVE: ahora el Id se genera automáticamente (IDENTITY)
             entity.Property(e => e.IdBoletin)
-                .ValueGeneratedNever()
+                .ValueGeneratedOnAdd()
                 .HasColumnName("idBoletin");
+
             entity.Property(e => e.DescripcionBoletin)
                 .HasColumnType("text")
                 .HasColumnName("descripcionBoletin");
@@ -49,10 +52,6 @@ public partial class boletinLayonContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("tituloBoletin");
-
-            entity.HasOne(d => d.IdNoticiaNavigation).WithMany(p => p.BoletinGenerals)
-                .HasForeignKey(d => d.IdNoticia)
-                .HasConstraintName("FK__boletinGe__idNot__44FF419A");
         });
 
         modelBuilder.Entity<ComentarioGeneral>(entity =>
@@ -79,10 +78,6 @@ public partial class boletinLayonContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("nombrelectorComentario");
-
-            entity.HasOne(d => d.IdNoticiaNavigation).WithMany(p => p.ComentarioGenerals)
-                .HasForeignKey(d => d.IdNoticia)
-                .HasConstraintName("FK__comentari__idNot__4222D4EF");
         });
 
         modelBuilder.Entity<NoticiaGeneral>(entity =>
@@ -111,10 +106,6 @@ public partial class boletinLayonContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("tituloNoticia");
-
-            entity.HasOne(d => d.IdUserNavigation).WithMany(p => p.NoticiaGenerals)
-                .HasForeignKey(d => d.IdUser)
-                .HasConstraintName("FK__noticiaGe__idUse__3F466844");
         });
 
         modelBuilder.Entity<RolGeneral>(entity =>
@@ -159,10 +150,6 @@ public partial class boletinLayonContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("nombreSuscripcion");
-
-            entity.HasOne(d => d.IdBoletinNavigation).WithMany(p => p.SuscripcionGenerals)
-                .HasForeignKey(d => d.IdBoletin)
-                .HasConstraintName("FK__suscripci__idBol__47DBAE45");
         });
 
         modelBuilder.Entity<UsuariosGeneral>(entity =>
@@ -193,11 +180,6 @@ public partial class boletinLayonContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("nombreUser");
-
-            entity.HasOne(d => d.IdRolNavigation).WithMany(p => p.UsuariosGenerals)
-                .HasForeignKey(d => d.IdRol)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__usuariosG__idRol__3B75D760");
         });
 
         OnModelCreatingPartial(modelBuilder);
