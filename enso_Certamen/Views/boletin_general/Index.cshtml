@@ -1,0 +1,61 @@
+@model IEnumerable<enso_Certamen.Models.BoletinGeneral>
+
+@{
+    ViewData["Title"] = "Boletines";
+}
+
+<h1 class="alert alert-dark text-center mt-4">Lista de Boletines</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-success">Crear Nuevo</a>
+</p>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Descripción</th>
+            <th>Fecha</th>
+            <th>Id Noticia</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.IdBoletin</td>
+                    <td>@item.TituloBoletin</td>
+                    <td>@item.DescripcionBoletin</td>
+                    <td>@item.FechaBoletin.ToString("dd/MM/yyyy")</td>
+                    <td>@item.IdNoticia</td>
+                    <td>
+                        <!-- Aseguramos que apunte al controlador correcto -->
+                        <a asp-controller="boletin_general"
+                            asp-action="Edit"
+                            asp-route-id="@item.IdBoletin"
+                            class="btn btn-warning btn-sm">
+                            Editar
+                        </a>
+
+                        <a asp-controller="boletin_general"
+                            asp-action="Delete"
+                            asp-route-id="@item.IdBoletin"
+                            class="btn btn-danger btn-sm">
+                            Eliminar
+                        </a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6" class="text-center">No hay boletines registrados.</td>
+            </tr>
+        }
+    </tbody>
+</table>

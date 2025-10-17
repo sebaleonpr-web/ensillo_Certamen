@@ -1,0 +1,27 @@
+@model enso_Certamen.Models.BoletinGeneral
+@{
+    ViewData["Title"] = "Eliminar Boletín";
+}
+<h1 class="alert alert-danger text-center mt-5">¿Seguro que quieres eliminar este boletín?</h1>
+
+<div class="card shadow-sm p-4 mt-3">
+    <dl class="row">
+        <dt class="col-sm-3">Título</dt>
+        <dd class="col-sm-9">@Model.TituloBoletin</dd>
+
+        <dt class="col-sm-3">Descripción</dt>
+        <dd class="col-sm-9">@Model.DescripcionBoletin</dd>
+
+        <dt class="col-sm-3">Fecha</dt>
+        <dd class="col-sm-9">@Model.FechaBoletin.ToString("dd/MM/yyyy HH:mm")</dd>
+
+        <dt class="col-sm-3">Noticia asociada</dt>
+        <dd class="col-sm-9">@(Model.IdNoticiaNavigation?.TituloNoticia ?? "Sin noticia")</dd>
+    </dl>
+
+    <form asp-action="Delete" method="post" class="mt-3 text-center">
+        <input type="hidden" asp-for="IdBoletin" />
+        <input type="submit" value="Eliminar" class="btn btn-danger w-25" />
+        <a asp-action="Index" class="btn btn-secondary w-25">Cancelar</a>
+    </form>
+}

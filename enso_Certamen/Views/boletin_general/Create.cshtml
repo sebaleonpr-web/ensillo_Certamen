@@ -1,0 +1,74 @@
+@model enso_Certamen.Models.BoletinGeneral
+
+@{
+    ViewData["Title"] = "Crear Boletín";
+}
+
+<h1 class="alert alert-dark text-center mt-5">Crear Boletín</h1>
+
+<div class="row">
+    <div>
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="TituloBoletin" class="control-label"></label>
+                <input asp-for="TituloBoletin" class="form-control" />
+                <span asp-validation-for="TituloBoletin" class="text-danger"></span>
+                <div id="e-TituloBoletin"></div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="DescripcionBoletin" class="control-label"></label>
+                <textarea asp-for="DescripcionBoletin" class="form-control"></textarea>
+                <span asp-validation-for="DescripcionBoletin" class="text-danger"></span>
+                <div id="e-DescripcionBoletin"></div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="FechaBoletin" class="control-label"></label>
+                <input asp-for="FechaBoletin" class="form-control" type="date" />
+                <span asp-validation-for="FechaBoletin" class="text-danger"></span>
+                <div id="e-FechaBoletin"></div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="IdNoticia" class="control-label">Noticia</label>
+                <select asp-for="IdNoticia" class="form-control" asp-items="ViewBag.IdNoticia">
+                    <option selected disabled value="">Seleccione Noticia</option>
+                </select>
+                <span asp-validation-for="IdNoticia" class="text-danger"></span>
+                <div id="e-IdNoticia"></div>
+            </div>
+
+            <div class="form-group mt-3 text-center">
+                <input type="reset" value="Limpiar" onclick="limpiar()" class="btn btn-outline-dark w-25" />
+                <input type="submit" value="Crear" onclick="validar(event)" class="btn btn-success w-25" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="text-end">
+    <a asp-action="Index" class="btn btn-dark">Volver</a>
+</div>
+
+<script src="~/js/helper.js"></script>
+<script>
+    const validar = (evt) => {
+        document.querySelectorAll('form .form-control').forEach(item => {
+            if (item.value.trim() == '') {
+                item.classList.add('is-invalid')
+                const err = document.getElementById('e-' + item.id)
+                if (err) err.innerHTML = '<span class="text-danger">Campo obligatorio</span>'
+            } else {
+                const err = document.getElementById('e-' + item.id)
+                if (err) err.innerHTML = ''
+                item.classList.remove('is-invalid')
+                item.classList.add('is-valid')
+            }
+        })
+        if (document.querySelectorAll('.is-invalid').length > 0)
+            evt.preventDefault()
+    }
+</script>

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("enso_Certamen")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f31fc0e2d04748e9d5e0d790d8e457c507b18ad1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cce1acd49f5b0410d6ccc5cc6586341f4fa1a1d6")]
 [assembly: System.Reflection.AssemblyProductAttribute("enso_Certamen")]
 [assembly: System.Reflection.AssemblyTitleAttribute("enso_Certamen")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
