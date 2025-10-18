@@ -5,6 +5,8 @@ namespace enso_Certamen.Models;
 
 public partial class ComentarioGeneral
 {
+
+
     public int IdComentario { get; set; }
 
     public string NombrelectorComentario { get; set; } = null!;
@@ -16,4 +18,6 @@ public partial class ComentarioGeneral
     public DateTime FechaComentario { get; set; }
 
     public int IdNoticia { get; set; }
+
+    public Guid GuidComentario { get; set; }
 }

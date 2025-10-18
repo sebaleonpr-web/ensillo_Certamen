@@ -23,7 +23,8 @@
             <td>@item.TituloBoletin</td>
             <td>@item.DescripcionBoletin</td>
             <td>@item.FechaBoletin.ToString("yyyy-MM-dd")</td>
-            <td>@(item.IdNoticia.HasValue ? item.IdNoticia.ToString() : "-")</td>
+            <td> <strong>@item.IdBoletin</strong>  <span class="text-muted">- @item.TituloBoletin</span>
+</td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.IdBoletin" class="btn btn-primary btn-sm">Editar</a>
                 <a asp-action="Delete" asp-route-id="@item.IdBoletin" class="btn btn-danger btn-sm">Eliminar</a>

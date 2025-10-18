@@ -45,12 +45,6 @@ namespace enso_Certamen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("TituloBoletin,DescripcionBoletin,FechaBoletin,IdNoticia")] BoletinGeneral model)
         {
-            var min = new DateTime(1753, 1, 1);
-            var max = new DateTime(9999, 12, 31);
-            if (model.FechaBoletin < min || model.FechaBoletin > max)
-            {
-                ModelState.AddModelError("FechaBoletin", $"La fecha debe estar entre {min.ToShortDateString()} y {max.ToShortDateString()}.");
-            }
             if (!ModelState.IsValid)
             {
                 ViewBag.Noticias = new SelectList(
@@ -91,14 +85,6 @@ namespace enso_Certamen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdBoletin,TituloBoletin,DescripcionBoletin,FechaBoletin,IdNoticia")] BoletinGeneral model)
         {
-
-            var min = new DateTime(1753, 1, 1);
-            var max = new DateTime(9999, 12, 31);
-            if (model.FechaBoletin < min || model.FechaBoletin > max)
-            {
-                ModelState.AddModelError("FechaBoletin", $"La fecha debe estar entre {min.ToShortDateString()} y {max.ToShortDateString()}.");
-            }
-
             if (id != model.IdBoletin) return NotFound();
 
             if (!ModelState.IsValid)

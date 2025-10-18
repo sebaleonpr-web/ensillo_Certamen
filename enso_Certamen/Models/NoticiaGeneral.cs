@@ -16,4 +16,8 @@ public partial class NoticiaGeneral
     public DateTime? FechaNoticia { get; set; }
 
     public int IdUser { get; set; }
+
+    public Guid GuidNoticia { get; set; }
+
+    public virtual ICollection<BoletinGeneral> BoletinGenerals { get; set; } = new List<BoletinGeneral>();
 }

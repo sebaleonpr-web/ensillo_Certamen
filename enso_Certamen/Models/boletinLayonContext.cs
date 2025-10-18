@@ -32,14 +32,11 @@ public partial class boletinLayonContext : DbContext
     {
         modelBuilder.Entity<BoletinGeneral>(entity =>
         {
-            entity.HasKey(e => e.IdBoletin).HasName("PK__boletinG__7E13FAF7BC1064BB");
+            entity.HasKey(e => e.IdBoletin);
 
             entity.ToTable("boletinGeneral");
 
-            // ⬇️ CAMBIO CLAVE: ahora el Id se genera automáticamente (IDENTITY)
-            entity.Property(e => e.IdBoletin)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("idBoletin");
+            entity.HasIndex(e => e.GuidBoletin, "UX_boletinGeneral_Guid").IsUnique();
 
             entity.Property(e => e.DescripcionBoletin)
                 .HasColumnType("text")
@@ -47,11 +44,17 @@ public partial class boletinLayonContext : DbContext
             entity.Property(e => e.FechaBoletin)
                 .HasColumnType("datetime")
                 .HasColumnName("fechaBoletin");
+            entity.Property(e => e.GuidBoletin).HasDefaultValueSql("(newid())");
             entity.Property(e => e.IdNoticia).HasColumnName("idNoticia");
             entity.Property(e => e.TituloBoletin)
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("tituloBoletin");
+
+            entity.HasOne(d => d.IdNoticiaNavigation).WithMany(p => p.BoletinGenerals)
+                .HasForeignKey(d => d.IdNoticia)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_BoletinGeneral_NoticiaGeneral");
         });
 
         modelBuilder.Entity<ComentarioGeneral>(entity =>
@@ -59,6 +62,8 @@ public partial class boletinLayonContext : DbContext
             entity.HasKey(e => e.IdComentario).HasName("PK__comentar__C74515DA4665DA84");
 
             entity.ToTable("comentarioGeneral");
+
+            entity.HasIndex(e => e.GuidComentario, "UX_comentarioGeneral_Guid").IsUnique();
 
             entity.Property(e => e.IdComentario)
                 .ValueGeneratedNever()
@@ -73,6 +78,7 @@ public partial class boletinLayonContext : DbContext
             entity.Property(e => e.FechaComentario)
                 .HasColumnType("datetime")
                 .HasColumnName("fechaComentario");
+            entity.Property(e => e.GuidComentario).HasDefaultValueSql("(newid())");
             entity.Property(e => e.IdNoticia).HasColumnName("idNoticia");
             entity.Property(e => e.NombrelectorComentario)
                 .HasMaxLength(50)
@@ -88,6 +94,8 @@ public partial class boletinLayonContext : DbContext
 
             entity.HasIndex(e => e.TituloNoticia, "UQ__noticiaG__3FD5306E05AE2D0E").IsUnique();
 
+            entity.HasIndex(e => e.GuidNoticia, "UX_noticiaGeneral_Guid").IsUnique();
+
             entity.Property(e => e.IdNoticia)
                 .ValueGeneratedNever()
                 .HasColumnName("idNoticia");
@@ -97,6 +105,7 @@ public partial class boletinLayonContext : DbContext
             entity.Property(e => e.FechaNoticia)
                 .HasColumnType("datetime")
                 .HasColumnName("fechaNoticia");
+            entity.Property(e => e.GuidNoticia).HasDefaultValueSql("(newid())");
             entity.Property(e => e.IdUser).HasColumnName("idUser");
             entity.Property(e => e.ResumenNoticia)
                 .HasMaxLength(500)
@@ -116,6 +125,8 @@ public partial class boletinLayonContext : DbContext
 
             entity.HasIndex(e => e.NombreRol, "UQ__rolGener__2787B00CE1CDAF0B").IsUnique();
 
+            entity.HasIndex(e => e.GuidRol, "UX_rolGeneral_Guid").IsUnique();
+
             entity.Property(e => e.IdRol)
                 .ValueGeneratedNever()
                 .HasColumnName("idRol");
@@ -123,6 +134,7 @@ public partial class boletinLayonContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("descripRol");
+            entity.Property(e => e.GuidRol).HasDefaultValueSql("(newid())");
             entity.Property(e => e.NombreRol)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -135,6 +147,8 @@ public partial class boletinLayonContext : DbContext
 
             entity.ToTable("suscripcionGeneral");
 
+            entity.HasIndex(e => e.GuidSuscripcion, "UX_suscripcionGeneral_Guid").IsUnique();
+
             entity.Property(e => e.IdSuscripcion)
                 .ValueGeneratedNever()
                 .HasColumnName("idSuscripcion");
@@ -145,6 +159,7 @@ public partial class boletinLayonContext : DbContext
             entity.Property(e => e.FechaSuscripcion)
                 .HasColumnType("datetime")
                 .HasColumnName("fechaSuscripcion");
+            entity.Property(e => e.GuidSuscripcion).HasDefaultValueSql("(newid())");
             entity.Property(e => e.IdBoletin).HasColumnName("idBoletin");
             entity.Property(e => e.NombreSuscripcion)
                 .HasMaxLength(50)
@@ -159,6 +174,8 @@ public partial class boletinLayonContext : DbContext
             entity.ToTable("usuariosGeneral");
 
             entity.HasIndex(e => e.EmailUser, "UQ__usuarios__AF638C4CFE55DE30").IsUnique();
+
+            entity.HasIndex(e => e.GuidUsuario, "UX_usuariosGeneral_Guid").IsUnique();
 
             entity.Property(e => e.IdUser)
                 .ValueGeneratedNever()
@@ -175,6 +192,7 @@ public partial class boletinLayonContext : DbContext
                 .HasMaxLength(30)
                 .IsUnicode(false)
                 .HasColumnName("emailUser");
+            entity.Property(e => e.GuidUsuario).HasDefaultValueSql("(newid())");
             entity.Property(e => e.IdRol).HasColumnName("idRol");
             entity.Property(e => e.NombreUser)
                 .HasMaxLength(50)

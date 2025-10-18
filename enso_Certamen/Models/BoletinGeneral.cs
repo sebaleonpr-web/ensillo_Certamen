@@ -1,35 +1,21 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.Collections.Generic;
 
-namespace enso_Certamen.Models
+namespace enso_Certamen.Models;
+
+public partial class BoletinGeneral
 {
-    public partial class BoletinGeneral
-    {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int IdBoletin { get; set; }
+    public string TituloBoletin { get; set; } = null!;
 
+    public string DescripcionBoletin { get; set; } = null!;
 
-        [Display(Name = "Título")]
-        [Required(ErrorMessage = "El título es obligatorio.")]
-        [StringLength(200, ErrorMessage = "El título no puede exceder los 50 caracteres.")]
-        public string TituloBoletin { get; set; } = null!;
+    public DateTime FechaBoletin { get; set; }
 
+    public int IdNoticia { get; set; }
 
-        [Display(Name = "Descripción")]
-        [Required(ErrorMessage = "La descripción es obligatoria.")]
-        public string DescripcionBoletin { get; set; } = null!;
+    public int IdBoletin { get; set; }
 
+    public Guid GuidBoletin { get; set; }
 
-        [Display(Name = "Fecha del Boletín")]
-        [Required(ErrorMessage = "La fecha del boletín es obligatoria.")]
-        [DataType(DataType.Date)]
-        public DateTime FechaBoletin { get; set; }
-
-
-        [Display(Name = "Noticia")]
-        [Required(ErrorMessage = "Debes Seleccionar una noticia.")]
-        public int? IdNoticia { get; set; }
-    }
+    public virtual NoticiaGeneral IdNoticiaNavigation { get; set; } = null!;
 }

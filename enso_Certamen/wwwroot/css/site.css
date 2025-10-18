@@ -29,3 +29,29 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+.is-invalid, .input-validation-error {
+  border-color: #dc3545 !important;
+}
+
+.invalid-feedback, .field-validation-error, .text-danger {
+  color: #dc3545 !important; 
+  display: block;
+  margin-top: .25rem;
+  font-size: .875rem;
+}
+
+.field-validation-error {
+  font-style: italic;
+  opacity: 0.9;
+}
+.field-validation-error {
+  color: #e35d6a !important;  
+  font-size: 0.8rem;
+  margin-left: 2px;
+}
+.field-validation-error::before {
+  content: "⚠️ ";
+}
+
+

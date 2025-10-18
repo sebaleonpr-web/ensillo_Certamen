@@ -16,4 +16,6 @@ public partial class UsuariosGeneral
     public string EmailUser { get; set; } = null!;
 
     public int IdRol { get; set; }
+
+    public Guid GuidUsuario { get; set; }
 }

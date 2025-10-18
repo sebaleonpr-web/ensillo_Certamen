@@ -14,4 +14,6 @@ public partial class SuscripcionGeneral
     public DateTime FechaSuscripcion { get; set; }
 
     public int IdBoletin { get; set; }
+
+    public Guid GuidSuscripcion { get; set; }
 }
