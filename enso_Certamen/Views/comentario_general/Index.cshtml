@@ -1,24 +1,25 @@
-@model IEnumerable<enso_Certamen.Models.usuariosGeneral>
+@model IEnumerable<enso_Certamen.Models.comentarioGeneral>
 @{
-    ViewData["Title"] = "Usuarios";
+    ViewData["Title"] = "Comentarios";
 }
 
 <div class="container py-4">
 
-    <h2 class="mb-3">Usuarios</h2>
+    <h2 class="mb-3">Comentarios</h2>
 
     <p>
-        <a asp-action="Create" class="btn btn-success">Nuevo Usuario</a>
+        <a asp-action="Create" class="btn btn-success">Nuevo Comentario</a>
     </p>
 
     <div class="table-responsive">
         <table class="table align-middle">
             <thead>
                 <tr>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
+                    <th>Lector</th>
                     <th>Email</th>
-                    <th>Rol</th>
+                    <th>Contenido</th>
+                    <th>Fecha</th>
+                    <th>Noticia</th>
                     <th class="text-end"></th>
                 </tr>
             </thead>
@@ -26,8 +27,8 @@
             @if (Model == null || !Model.Any())
             {
                 <tr>
-                    <td colspan="5" class="text-center text-muted py-4">
-                        No hay usuarios registrados.
+                    <td colspan="6" class="text-center text-muted py-4">
+                        No hay comentarios registrados.
                     </td>
                 </tr>
             }
@@ -36,20 +37,20 @@
                 foreach (var item in Model)
                 {
                     <tr>
-                        <td>@item.nombreUser</td>
-                        <td>@item.apellidoUser</td>
-                        <td>@item.emailUser</td>
+                        <td>@item.nombrelectorComentario</td>
+                        <td>@item.emailLectorComentario</td>
                         <td>
-                            @* Muestra el Guid del rol por defecto *@
-                            @item.GuidRol
-
-                            @* Si tu navegación trae el nombre del rol, descomenta y ajusta la propiedad:
-                            @item.GuidRolNavigation?.NombreRol
-                            *@
+                            @{
+                                var texto = item.contenidoComentario ?? string.Empty;
+                                var preview = texto.Length > 100 ? texto.Substring(0, 100) + "…" : texto;
+                            }
+                            @preview
                         </td>
+                        <td>@item.fechaComentario.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td>@item.GuidNoticia</td>
                         <td class="text-end">
-                            <a asp-action="Edit" asp-route-id="@item.GuidUsuario" class="btn btn-sm btn-primary">Editar</a>
-                            <a asp-action="Delete" asp-route-id="@item.GuidUsuario" class="btn btn-sm btn-danger ms-1">Eliminar</a>
+                            <a asp-action="Edit" asp-route-id="@item.GuidComentario" class="btn btn-sm btn-primary">Editar</a>
+                            <a asp-action="Delete" asp-route-id="@item.GuidComentario" class="btn btn-sm btn-danger ms-1">Eliminar</a>
                         </td>
                     </tr>
                 }
@@ -57,8 +58,5 @@
             </tbody>
         </table>
     </div>
-</div>
 
-@section Scripts {
-    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
-}
+</div>
