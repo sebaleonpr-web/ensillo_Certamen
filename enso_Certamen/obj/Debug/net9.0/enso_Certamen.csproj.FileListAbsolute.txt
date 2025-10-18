@@ -262,7 +262,6 @@
 /Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/obj/Debug/net9.0/scopedcss/bundle/enso_Certamen.styles.css
 /Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/obj/Debug/net9.0/scopedcss/projectbundle/enso_Certamen.bundle.scp.css
 /Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/obj/Debug/net9.0/compressed/3p583aqef0-xd4at98qvi.gz
-/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/obj/Debug/net9.0/compressed/o3gl4mjoe8-61n19gt1b8.gz
 /Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/obj/Debug/net9.0/compressed/7w2525bb30-xtxxf3hu2r.gz
 /Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/obj/Debug/net9.0/compressed/63rylzfwyd-bqjiyaj88i.gz
 /Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/obj/Debug/net9.0/compressed/fl69u4q8pr-c2jlpeoesf.gz
@@ -335,3 +334,4 @@
 /Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/obj/Debug/net9.0/enso_Certamen.pdb
 /Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/obj/Debug/net9.0/enso_Certamen.genruntimeconfig.cache
 /Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/obj/Debug/net9.0/ref/enso_Certamen.dll
+/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/obj/Debug/net9.0/compressed/o3gl4mjoe8-9s25hnielq.gz
