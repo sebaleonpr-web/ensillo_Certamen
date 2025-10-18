@@ -1,4 +1,8 @@
 @model enso_Certamen.Models.BoletinGeneral
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
+
 
 <h2>Nuevo Boletín</h2>
 
@@ -19,17 +23,18 @@
 
     <div class="form-group mt-3">
         <label asp-for="FechaBoletin">Fecha</label>
-        <input asp-for="FechaBoletin" type="date" class="form-control" />
+        <input asp-for="FechaBoletin" type="date" class="form-control" min="1753-01-01" max="9999-12-31"  />
         <span asp-validation-for="FechaBoletin" class="text-danger"></span>
     </div>
 
-    <div class="form-group mt-3">
-        <label for="IdNoticia">Noticia</label>
-        <select id="IdNoticia" name="IdNoticia" asp-items="ViewBag.Noticias" class="form-control" required>
-            <option value="" selected disabled hidden>-- Selecciona una noticia --</option>
-        </select>
-        <span asp-validation-for="IdNoticia" class="text-danger"></span>
-    </div>
+            <div class="form-group mt-3">
+            <label asp-for="IdNoticia">Noticia</label>
+            <select asp-for="IdNoticia" asp-items="ViewBag.Noticias" class="form-control">
+                <option value="" selected disabled hidden>-- Selecciona una noticia --</option>
+            </select>
+            <span asp-validation-for="IdNoticia" class="invalid-feedback"></span>
+        </div>
+
 
     <button type="submit" class="btn btn-primary mt-3">Guardar</button>
     <a asp-action="Index" class="btn btn-secondary mt-3">Volver</a>

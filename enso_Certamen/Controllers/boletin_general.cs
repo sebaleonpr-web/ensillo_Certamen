@@ -21,8 +21,8 @@ namespace enso_Certamen.Controllers
         public async Task<IActionResult> Index()
         {
             var lista = await _db.BoletinGenerals
-                                 .OrderByDescending(b => b.FechaBoletin)
-                                 .ToListAsync();
+                                .OrderByDescending(b => b.FechaBoletin)
+                                .ToListAsync();
 
             return View("~/Views/boletin_general/Index.cshtml", lista);
         }
@@ -32,8 +32,8 @@ namespace enso_Certamen.Controllers
         {
             ViewBag.Noticias = new SelectList(
                 _db.NoticiaGenerals
-                   .OrderBy(n => n.TituloNoticia)
-                   .Select(n => new { n.IdNoticia, n.TituloNoticia }),
+                .OrderBy(n => n.TituloNoticia)
+                .Select(n => new { n.IdNoticia, n.TituloNoticia }),
                 "IdNoticia", "TituloNoticia"
             );
 
@@ -45,6 +45,12 @@ namespace enso_Certamen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("TituloBoletin,DescripcionBoletin,FechaBoletin,IdNoticia")] BoletinGeneral model)
         {
+            var min = new DateTime(1753, 1, 1);
+            var max = new DateTime(9999, 12, 31);
+            if (model.FechaBoletin < min || model.FechaBoletin > max)
+            {
+                ModelState.AddModelError("FechaBoletin", $"La fecha debe estar entre {min.ToShortDateString()} y {max.ToShortDateString()}.");
+            }
             if (!ModelState.IsValid)
             {
                 ViewBag.Noticias = new SelectList(
@@ -72,8 +78,8 @@ namespace enso_Certamen.Controllers
 
             ViewBag.Noticias = new SelectList(
                 _db.NoticiaGenerals
-                   .OrderBy(n => n.TituloNoticia)
-                   .Select(n => new { n.IdNoticia, n.TituloNoticia }),
+                .OrderBy(n => n.TituloNoticia)
+                .Select(n => new { n.IdNoticia, n.TituloNoticia }),
                 "IdNoticia", "TituloNoticia", entidad.IdNoticia
             );
 
@@ -85,14 +91,22 @@ namespace enso_Certamen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdBoletin,TituloBoletin,DescripcionBoletin,FechaBoletin,IdNoticia")] BoletinGeneral model)
         {
+
+            var min = new DateTime(1753, 1, 1);
+            var max = new DateTime(9999, 12, 31);
+            if (model.FechaBoletin < min || model.FechaBoletin > max)
+            {
+                ModelState.AddModelError("FechaBoletin", $"La fecha debe estar entre {min.ToShortDateString()} y {max.ToShortDateString()}.");
+            }
+
             if (id != model.IdBoletin) return NotFound();
 
             if (!ModelState.IsValid)
             {
                 ViewBag.Noticias = new SelectList(
                     _db.NoticiaGenerals
-                       .OrderBy(n => n.TituloNoticia)
-                       .Select(n => new { n.IdNoticia, n.TituloNoticia }),
+                    .OrderBy(n => n.TituloNoticia)
+                    .Select(n => new { n.IdNoticia, n.TituloNoticia }),
                     "IdNoticia", "TituloNoticia", model.IdNoticia
                 );
                 return View("~/Views/boletin_general/Edit.cshtml", model);
