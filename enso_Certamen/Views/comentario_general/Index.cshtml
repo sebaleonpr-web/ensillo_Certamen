@@ -1,0 +1,64 @@
+@model IEnumerable<enso_Certamen.Models.usuariosGeneral>
+@{
+    ViewData["Title"] = "Usuarios";
+}
+
+<div class="container py-4">
+
+    <h2 class="mb-3">Usuarios</h2>
+
+    <p>
+        <a asp-action="Create" class="btn btn-success">Nuevo Usuario</a>
+    </p>
+
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th class="text-end"></th>
+                </tr>
+            </thead>
+            <tbody>
+            @if (Model == null || !Model.Any())
+            {
+                <tr>
+                    <td colspan="5" class="text-center text-muted py-4">
+                        No hay usuarios registrados.
+                    </td>
+                </tr>
+            }
+            else
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.nombreUser</td>
+                        <td>@item.apellidoUser</td>
+                        <td>@item.emailUser</td>
+                        <td>
+                            @* Muestra el Guid del rol por defecto *@
+                            @item.GuidRol
+
+                            @* Si tu navegación trae el nombre del rol, descomenta y ajusta la propiedad:
+                            @item.GuidRolNavigation?.NombreRol
+                            *@
+                        </td>
+                        <td class="text-end">
+                            <a asp-action="Edit" asp-route-id="@item.GuidUsuario" class="btn btn-sm btn-primary">Editar</a>
+                            <a asp-action="Delete" asp-route-id="@item.GuidUsuario" class="btn btn-sm btn-danger ms-1">Eliminar</a>
+                        </td>
+                    </tr>
+                }
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

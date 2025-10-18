@@ -48,6 +48,22 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvYm9sZXRpbl9nZW5lcmFsL0luZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/Views/comentario_general/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvY29tZW50YXJpb19nZW5lcmFsL0NyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/Views/comentario_general/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvY29tZW50YXJpb19nZW5lcmFsL0RlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/Views/comentario_general/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvY29tZW50YXJpb19nZW5lcmFsL0VkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/Views/comentario_general/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvY29tZW50YXJpb19nZW5lcmFsL0luZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9JbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -68,12 +84,60 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3Mvbm90aWNpYV9nZW5lcmFsL0luZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/Views/rol_general/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3Mvcm9sX2dlbmVyYWwvQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/Views/rol_general/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3Mvcm9sX2dlbmVyYWwvRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/Views/rol_general/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3Mvcm9sX2dlbmVyYWwvRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/Views/rol_general/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3Mvcm9sX2dlbmVyYWwvSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL0Vycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/Views/suscripcion_general/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3Mvc3VzY3JpcGNpb25fZ2VuZXJhbC9DcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/Views/suscripcion_general/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3Mvc3VzY3JpcGNpb25fZ2VuZXJhbC9EZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/Views/suscripcion_general/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3Mvc3VzY3JpcGNpb25fZ2VuZXJhbC9FZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/Views/suscripcion_general/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3Mvc3VzY3JpcGNpb25fZ2VuZXJhbC9JbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/Views/usuario_general/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvdXN1YXJpb19nZW5lcmFsL0NyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/Views/usuario_general/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvdXN1YXJpb19nZW5lcmFsL0RlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/Views/usuario_general/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvdXN1YXJpb19nZW5lcmFsL0VkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/Views/usuario_general/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvdXN1YXJpb19nZW5lcmFsL0luZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [/Users/seba_home/Documents/Proyectos_Git/ensillo_Certamen/enso_Certamen/Views/_ViewImports.cshtml]
