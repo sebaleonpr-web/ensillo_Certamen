@@ -64,8 +64,8 @@ namespace enso_Certamen.Controllers
 
             ViewBag.Noticias = new SelectList(
                 _db.noticiaGenerals
-                   .OrderBy(n => n.GuidNoticia)
-                   .Select(n => new { n.GuidNoticia, Texto = n.GuidNoticia.ToString() }),
+                .OrderBy(n => n.GuidNoticia)
+                .Select(n => new { n.GuidNoticia, Texto = n.GuidNoticia.ToString() }),
                 "GuidNoticia", "Texto", entidad.GuidNoticia
             );
 
@@ -82,8 +82,8 @@ namespace enso_Certamen.Controllers
             {
                 ViewBag.Noticias = new SelectList(
                     _db.noticiaGenerals
-                       .OrderBy(n => n.GuidNoticia)
-                       .Select(n => new { n.GuidNoticia, Texto = n.GuidNoticia.ToString() }),
+                    .OrderBy(n => n.GuidNoticia)
+                    .Select(n => new { n.GuidNoticia, Texto = n.GuidNoticia.ToString() }),
                     "GuidNoticia", "Texto", model.GuidNoticia
                 );
                 return View("~/Views/boletin_general/Edit.cshtml", model);
