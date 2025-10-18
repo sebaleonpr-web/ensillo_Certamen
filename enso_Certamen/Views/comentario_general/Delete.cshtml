@@ -1,0 +1,28 @@
+@model enso_Certamen.Models.ComentarioGeneral
+
+<h2>Eliminar Comentario</h2>
+
+<div class="alert alert-warning">
+    <p>¿Seguro que deseas eliminar el comentario de <strong>@Model.NombrelectorComentario</strong>?</p>
+</div>
+
+<dl class="row">
+    <dt class="col-sm-2">Correo</dt>
+    <dd class="col-sm-10">@Model.EmailLectorComentario</dd>
+
+    <dt class="col-sm-2">Contenido</dt>
+    <dd class="col-sm-10">@Model.ContenidoComentario</dd>
+
+    <dt class="col-sm-2">Fecha</dt>
+    <dd class="col-sm-10">@Model.FechaComentario.ToString("yyyy-MM-dd")</dd>
+
+    <dt class="col-sm-2">Noticia</dt>
+    <dd class="col-sm-10">@Model.IdNoticia</dd>
+</dl>
+
+<form asp-action="Delete" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="IdComentario" />
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Cancelar</a>
+</form>
