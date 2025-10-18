@@ -20,8 +20,8 @@ namespace enso_Certamen.Controllers
         public async Task<IActionResult> Index()
         {
             var lista = await _db.boletinGenerals
-                                 .OrderByDescending(b => b.FechaBoletin)
-                                 .ToListAsync();
+                                .OrderByDescending(b => b.FechaBoletin)
+                                .ToListAsync();
             return View("~/Views/boletin_general/Index.cshtml", lista);
         }
 
@@ -29,8 +29,8 @@ namespace enso_Certamen.Controllers
         {
             ViewBag.Noticias = new SelectList(
                 _db.noticiaGenerals
-                   .OrderBy(n => n.GuidNoticia)
-                   .Select(n => new { n.GuidNoticia, Texto = n.GuidNoticia.ToString() }),
+                .OrderBy(n => n.GuidNoticia)
+                .Select(n => new { n.GuidNoticia, Texto = n.GuidNoticia.ToString() }),
                 "GuidNoticia", "Texto"
             );
             return View("~/Views/boletin_general/Create.cshtml");
@@ -44,8 +44,8 @@ namespace enso_Certamen.Controllers
             {
                 ViewBag.Noticias = new SelectList(
                     _db.noticiaGenerals
-                       .OrderBy(n => n.GuidNoticia)
-                       .Select(n => new { n.GuidNoticia, Texto = n.GuidNoticia.ToString() }),
+                    .OrderBy(n => n.GuidNoticia)
+                    .Select(n => new { n.GuidNoticia, Texto = n.GuidNoticia.ToString() }),
                     "GuidNoticia", "Texto", model.GuidNoticia
                 );
                 return View("~/Views/boletin_general/Create.cshtml", model);
