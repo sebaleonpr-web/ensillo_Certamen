@@ -1,35 +1,54 @@
-@model IEnumerable<enso_Certamen.Models.BoletinGeneral>
+@model IEnumerable<enso_Certamen.Models.boletinGeneral>
+@{
+    ViewData["Title"] = "Boletines";
+}
 
-<h2>Boletines</h2>
+<div class="container py-4">
 
-<p>
-    <a asp-action="Create" class="btn btn-success">Nuevo Boletín</a>
-</p>
+    <h2 class="mb-3">Boletines</h2>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Título</th>
-            <th>Descripción</th>
-            <th>Fecha</th>
-            <th>Noticia</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>@item.TituloBoletin</td>
-            <td>@item.DescripcionBoletin</td>
-            <td>@item.FechaBoletin.ToString("yyyy-MM-dd")</td>
-            <td> <strong>@item.IdBoletin</strong>  <span class="text-muted">- @item.TituloBoletin</span>
-</td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdBoletin" class="btn btn-primary btn-sm">Editar</a>
-                <a asp-action="Delete" asp-route-id="@item.IdBoletin" class="btn btn-danger btn-sm">Eliminar</a>
-            </td>
-        </tr>
-    }
-    </tbody>
-</table>
+    <p>
+        <a asp-action="Create" class="btn btn-success">Nuevo Boletín</a>
+    </p>
+
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Descripción</th>
+                    <th>Fecha</th>
+                    <th>Noticia</th>
+                    <th class="text-end"></th>
+                </tr>
+            </thead>
+            <tbody>
+            @if (Model == null || !Model.Any())
+            {
+                <tr>
+                    <td colspan="5" class="text-center text-muted py-4">
+                        No hay boletines registrados.
+                    </td>
+                </tr>
+            }
+            else
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.TituloBoletin</td>
+                        <td>@item.DescripcionBoletin</td>
+                        <td>@item.FechaBoletin.ToString("yyyy-MM-dd")</td>
+                        <td>@item.GuidNoticia</td> @* Cambia a NoticiaId si tu propiedad se llama así *@
+                        <td class="text-end">
+                            <a asp-action="Edit" asp-route-id="@item.GuidBoletin" class="btn btn-sm btn-primary">Editar</a>
+                            <a asp-action="Delete" asp-route-id="@item.GuidBoletin" class="btn btn-sm btn-danger ms-1">Eliminar</a>
+                        </td>
+                    </tr>
+                }
+            }
+            </tbody>
+        </table>
+    </div>
+
+</div>

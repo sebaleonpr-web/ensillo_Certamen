@@ -1,94 +1,42 @@
-using enso_Certamen.Models;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Linq; // para Any()
+using enso_Certamen.Models;
 
-namespace noticia_general.Controllers
+namespace enso_Certamen.Controllers
 {
     public class noticia_generalController : Controller
     {
-        private readonly boletinLayonContext _context;
+        private readonly boletinLayonContext _db;
 
-        public noticia_generalController(boletinLayonContext context)
+        public noticia_generalController(boletinLayonContext db)
         {
-            _context = context;
+            _db = db;
         }
 
-        // GET: noticia_general/Index
         public async Task<IActionResult> Index()
         {
-            return View(await _context.NoticiaGenerals.ToListAsync());
+            var lista = await _db.noticiaGenerals.ToListAsync();
+            return View("~/Views/noticia_general/Index.cshtml", lista);
         }
 
-        // GET: noticia_general/Create
         public IActionResult Create()
         {
-            return View();
+            return View("~/Views/noticia_general/Create.cshtml");
         }
 
-        // POST: noticia_general/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdNoticia,TituloNoticia,ResumenNoticia,ContenidoNoticia,FechaNoticia,IdUser")]
-        NoticiaGeneral noticia_general)
+        public async Task<IActionResult> Create([Bind("GuidNoticia,TituloNoticia,DescripcionNoticia,FechaNoticia")] noticiaGeneral model)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(noticia_general);
-                await _context.SaveChangesAsync();
-                // Mantengo tu patrón anterior: volver a Create
-                return RedirectToAction(nameof(Create));
-                // Si prefieres listar: return RedirectToAction(nameof(Index));
-            }
-            return View(noticia_general);
-        }
+            if (!ModelState.IsValid)
+                return View("~/Views/noticia_general/Create.cshtml", model);
 
-        // GET: noticia_general/Edit/5
-        public async Task<IActionResult> Edit(int id)
-        {
-            if (id == 0) return NotFound();
-
-            var noticia_general = await _context.NoticiaGenerals.FindAsync(id);
-            if (noticia_general == null) return NotFound();
-
-            return View(noticia_general);
-        }
-
-        // POST: noticia_general/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdNoticia,TituloNoticia,ResumenNoticia,ContenidoNoticia,FechaNoticia,IdUser")]
-        NoticiaGeneral noticia_general)
-        {
-            if (id != noticia_general.IdNoticia) return NotFound();
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(noticia_general);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!Exists(noticia_general.IdNoticia))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(noticia_general);
-        }
-
-        // Helper usado en el catch
-        private bool Exists(int id)
-        {
-            return _context.NoticiaGenerals.Any(e => e.IdNoticia == id);
+            _db.noticiaGenerals.Add(model);
+            await _db.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
     }
 }

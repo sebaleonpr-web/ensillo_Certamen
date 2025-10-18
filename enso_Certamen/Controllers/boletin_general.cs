@@ -17,83 +17,74 @@ namespace enso_Certamen.Controllers
             _db = db;
         }
 
-        // GET: /boletin_general
         public async Task<IActionResult> Index()
         {
-            var lista = await _db.BoletinGenerals
-                                .OrderByDescending(b => b.FechaBoletin)
-                                .ToListAsync();
-
+            var lista = await _db.boletinGenerals
+                                 .OrderByDescending(b => b.FechaBoletin)
+                                 .ToListAsync();
             return View("~/Views/boletin_general/Index.cshtml", lista);
         }
 
-        // GET: /boletin_general/Create
         public IActionResult Create()
         {
             ViewBag.Noticias = new SelectList(
-                _db.NoticiaGenerals
-                .OrderBy(n => n.TituloNoticia)
-                .Select(n => new { n.IdNoticia, n.TituloNoticia }),
-                "IdNoticia", "TituloNoticia"
+                _db.noticiaGenerals
+                   .OrderBy(n => n.GuidNoticia)
+                   .Select(n => new { n.GuidNoticia, Texto = n.GuidNoticia.ToString() }),
+                "GuidNoticia", "Texto"
             );
-
             return View("~/Views/boletin_general/Create.cshtml");
         }
 
-        // POST: /boletin_general/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TituloBoletin,DescripcionBoletin,FechaBoletin,IdNoticia")] BoletinGeneral model)
+        public async Task<IActionResult> Create([Bind("TituloBoletin,DescripcionBoletin,FechaBoletin,GuidNoticia")] boletinGeneral model)
         {
             if (!ModelState.IsValid)
             {
                 ViewBag.Noticias = new SelectList(
-                    _db.NoticiaGenerals
-                    .OrderBy(n => n.TituloNoticia)
-                    .Select(n => new { n.IdNoticia, n.TituloNoticia }),
-                    "IdNoticia", "TituloNoticia", model.IdNoticia
+                    _db.noticiaGenerals
+                       .OrderBy(n => n.GuidNoticia)
+                       .Select(n => new { n.GuidNoticia, Texto = n.GuidNoticia.ToString() }),
+                    "GuidNoticia", "Texto", model.GuidNoticia
                 );
                 return View("~/Views/boletin_general/Create.cshtml", model);
             }
 
-            // El ID ahora se genera automáticamente por la BD (IDENTITY)
-            _db.BoletinGenerals.Add(model);
+            _db.boletinGenerals.Add(model);
             await _db.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: /boletin_general/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null) return NotFound();
-
-            var entidad = await _db.BoletinGenerals.FindAsync(id);
+            var entidad = await _db.boletinGenerals.FindAsync(id);
             if (entidad == null) return NotFound();
 
             ViewBag.Noticias = new SelectList(
-                _db.NoticiaGenerals
-                .OrderBy(n => n.TituloNoticia)
-                .Select(n => new { n.IdNoticia, n.TituloNoticia }),
-                "IdNoticia", "TituloNoticia", entidad.IdNoticia
+                _db.noticiaGenerals
+                   .OrderBy(n => n.GuidNoticia)
+                   .Select(n => new { n.GuidNoticia, Texto = n.GuidNoticia.ToString() }),
+                "GuidNoticia", "Texto", entidad.GuidNoticia
             );
 
             return View("~/Views/boletin_general/Edit.cshtml", entidad);
         }
 
-        // POST: /boletin_general/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdBoletin,TituloBoletin,DescripcionBoletin,FechaBoletin,IdNoticia")] BoletinGeneral model)
+        public async Task<IActionResult> Edit(Guid id, [Bind("GuidBoletin,TituloBoletin,DescripcionBoletin,FechaBoletin,GuidNoticia")] boletinGeneral model)
         {
-            if (id != model.IdBoletin) return NotFound();
+            if (id != model.GuidBoletin) return NotFound();
 
             if (!ModelState.IsValid)
             {
                 ViewBag.Noticias = new SelectList(
-                    _db.NoticiaGenerals
-                    .OrderBy(n => n.TituloNoticia)
-                    .Select(n => new { n.IdNoticia, n.TituloNoticia }),
-                    "IdNoticia", "TituloNoticia", model.IdNoticia
+                    _db.noticiaGenerals
+                       .OrderBy(n => n.GuidNoticia)
+                       .Select(n => new { n.GuidNoticia, Texto = n.GuidNoticia.ToString() }),
+                    "GuidNoticia", "Texto", model.GuidNoticia
                 );
                 return View("~/Views/boletin_general/Edit.cshtml", model);
             }
@@ -105,7 +96,7 @@ namespace enso_Certamen.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                var existe = await _db.BoletinGenerals.AnyAsync(b => b.IdBoletin == model.IdBoletin);
+                var existe = await _db.boletinGenerals.AnyAsync(b => b.GuidBoletin == model.GuidBoletin);
                 if (!existe) return NotFound();
                 throw;
             }
@@ -113,26 +104,22 @@ namespace enso_Certamen.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: /boletin_general/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null) return NotFound();
-
-            var entidad = await _db.BoletinGenerals.FindAsync(id);
+            var entidad = await _db.boletinGenerals.FindAsync(id);
             if (entidad == null) return NotFound();
-
             return View("~/Views/boletin_general/Delete.cshtml", entidad);
         }
 
-        // POST: /boletin_general/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var entidad = await _db.BoletinGenerals.FindAsync(id);
+            var entidad = await _db.boletinGenerals.FindAsync(id);
             if (entidad != null)
             {
-                _db.BoletinGenerals.Remove(entidad);
+                _db.boletinGenerals.Remove(entidad);
                 await _db.SaveChangesAsync();
             }
             return RedirectToAction(nameof(Index));

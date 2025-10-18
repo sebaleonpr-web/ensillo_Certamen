@@ -1,21 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace enso_Certamen.Models;
 
-public partial class UsuariosGeneral
+[Table("usuariosGeneral")]
+public partial class usuariosGeneral
 {
-    public int IdUser { get; set; }
-
-    public string ContraUser { get; set; } = null!;
-
-    public string NombreUser { get; set; } = null!;
-
-    public string ApellidoUser { get; set; } = null!;
-
-    public string EmailUser { get; set; } = null!;
-
-    public int IdRol { get; set; }
-
+    [Key]
     public Guid GuidUsuario { get; set; }
+
+    [StringLength(100)]
+    [Unicode(false)]
+    public string contraUser { get; set; } = null!;
+
+    [StringLength(50)]
+    [Unicode(false)]
+    public string nombreUser { get; set; } = null!;
+
+    [StringLength(50)]
+    [Unicode(false)]
+    public string apellidoUser { get; set; } = null!;
+
+    [StringLength(100)]
+    [Unicode(false)]
+    public string emailUser { get; set; } = null!;
+
+    public Guid GuidRol { get; set; }
+
+    [ForeignKey("GuidRol")]
+    [InverseProperty("usuariosGenerals")]
+    public virtual rolGeneral GuidRolNavigation { get; set; } = null!;
+
+    [InverseProperty("GuidUsuarioNavigation")]
+    public virtual ICollection<noticiaGeneral> noticiaGenerals { get; set; } = new List<noticiaGeneral>();
 }

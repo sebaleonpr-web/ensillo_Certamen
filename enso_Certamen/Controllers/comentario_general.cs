@@ -1,94 +1,104 @@
-using enso_Certamen.Models;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Linq; // para Any()
+using enso_Certamen.Models;
 
-namespace comentario_general.Controllers
+namespace enso_Certamen.Controllers
 {
     public class comentario_generalController : Controller
     {
-        private readonly boletinLayonContext _context;
+        private readonly boletinLayonContext _db;
 
-        public comentario_generalController(boletinLayonContext context)
+        public comentario_generalController(boletinLayonContext db)
         {
-            _context = context;
+            _db = db;
         }
 
-        // GET: comentario_general/Index (necesario para el RedirectToAction(nameof(Index)))
+        // GET: /comentario_general
         public async Task<IActionResult> Index()
         {
-            return View(await _context.ComentarioGenerals.ToListAsync());
+            var lista = await _db.comentarioGenerals
+                                 .OrderByDescending(c => c.fechaComentario)
+                                 .ToListAsync();
+            return View("~/Views/comentario_general/Index.cshtml", lista);
         }
 
-        // GET: comentario_general/Create
+        // GET: /comentario_general/Create
         public IActionResult Create()
         {
-            return View();
+            return View("~/Views/comentario_general/Create.cshtml");
         }
 
-        // POST: comentario_general/Create
+        // POST: /comentario_general/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdComentario,NombrelectorComentario,EmailLectorComentario,ContenidoComentario,FechaComentario,IdNoticia")]
-        ComentarioGeneral comentario_general)
+        public async Task<IActionResult> Create(comentarioGeneral model)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(comentario_general);
-                await _context.SaveChangesAsync();
-                // Mantengo tu patrón anterior: volver a Create
-                return RedirectToAction(nameof(Create));
-                // Si prefieres listar: return RedirectToAction(nameof(Index));
-            }
-            return View(comentario_general);
+            if (!ModelState.IsValid)
+                return View("~/Views/comentario_general/Create.cshtml", model);
+
+            _db.comentarioGenerals.Add(model);
+            await _db.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: comentario_general/Edit/5
-        public async Task<IActionResult> Edit(int id)
+        // GET: /comentario_general/Edit/{id}
+        public async Task<IActionResult> Edit(Guid? id)
         {
-            if (id == 0) return NotFound();
-
-            var comentario_general = await _context.ComentarioGenerals.FindAsync(id);
-            if (comentario_general == null) return NotFound();
-
-            return View(comentario_general);
+            if (id == null) return NotFound();
+            var entidad = await _db.comentarioGenerals.FindAsync(id);
+            if (entidad == null) return NotFound();
+            return View("~/Views/comentario_general/Edit.cshtml", entidad);
         }
 
-        // POST: comentario_general/Edit/5
+        // POST: /comentario_general/Edit/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdComentario,NombrelectorComentario,EmailLectorComentario,ContenidoComentario,FechaComentario,IdNoticia")]
-        ComentarioGeneral comentario_general)
+        public async Task<IActionResult> Edit(Guid id, comentarioGeneral model)
         {
-            if (id != comentario_general.IdComentario) return NotFound();
+            if (id != model.GuidComentario) return NotFound();
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return View("~/Views/comentario_general/Edit.cshtml", model);
+
+            try
             {
-                try
-                {
-                    _context.Update(comentario_general);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!Exists(comentario_general.IdComentario))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                _db.Update(model);
+                await _db.SaveChangesAsync();
             }
-            return View(comentario_general);
+            catch (DbUpdateConcurrencyException)
+            {
+                var existe = await _db.comentarioGenerals.AnyAsync(e => e.GuidComentario == id);
+                if (!existe) return NotFound();
+                throw;
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
-        // Helper usado en el catch
-        private bool Exists(int id)
+        // GET: /comentario_general/Delete/{id}
+        public async Task<IActionResult> Delete(Guid? id)
         {
-            return _context.ComentarioGenerals.Any(e => e.IdComentario == id);
+            if (id == null) return NotFound();
+            var entidad = await _db.comentarioGenerals.FindAsync(id);
+            if (entidad == null) return NotFound();
+            return View("~/Views/comentario_general/Delete.cshtml", entidad);
+        }
+
+        // POST: /comentario_general/Delete/{id}
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        {
+            var entidad = await _db.comentarioGenerals.FindAsync(id);
+            if (entidad != null)
+            {
+                _db.comentarioGenerals.Remove(entidad);
+                await _db.SaveChangesAsync();
+            }
+            return RedirectToAction(nameof(Index));
         }
     }
 }

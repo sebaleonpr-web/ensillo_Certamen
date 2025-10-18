@@ -1,95 +1,104 @@
-using enso_Certamen.Models;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Linq; // para Any()
+using enso_Certamen.Models;
 
-namespace usuario_general.Controllers
+namespace enso_Certamen.Controllers
 {
     public class usuario_generalController : Controller
     {
-        private readonly boletinLayonContext _context;
+        private readonly boletinLayonContext _db;
 
-        public usuario_generalController(boletinLayonContext context)
+        public usuario_generalController(boletinLayonContext db)
         {
-            _context = context;
+            _db = db;
         }
 
-        // GET: usuario_general/Index
+        // GET: /usuario_general
         public async Task<IActionResult> Index()
         {
-            return View(await _context.UsuariosGenerals.ToListAsync());
+            var lista = await _db.usuariosGenerals
+                                 .OrderBy(u => u.GuidUsuario)
+                                 .ToListAsync();
+            return View("~/Views/usuario_general/Index.cshtml", lista);
         }
 
-        // GET: usuario_general/Create
+        // GET: /usuario_general/Create
         public IActionResult Create()
         {
-            return View();
+            return View("~/Views/usuario_general/Create.cshtml");
         }
 
-        // POST: usuario_general/Create
+        // POST: /usuario_general/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdUser,ContraUser,NombreUser,ApellidoUser,EmailUser,IdRol")]
-        UsuariosGeneral usuario_general)
+        public async Task<IActionResult> Create(usuariosGeneral model)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(usuario_general);
-                await _context.SaveChangesAsync();
-                // Mantenemos tu patrón: volver al formulario
-                return RedirectToAction(nameof(Create));
-                // Si prefieres listar:
-                // return RedirectToAction(nameof(Index));
-            }
-            return View(usuario_general);
+            if (!ModelState.IsValid)
+                return View("~/Views/usuario_general/Create.cshtml", model);
+
+            _db.usuariosGenerals.Add(model);
+            await _db.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: usuario_general/Edit/5
-        public async Task<IActionResult> Edit(int id)
+        // GET: /usuario_general/Edit/{id}
+        public async Task<IActionResult> Edit(Guid? id)
         {
-            if (id == 0) return NotFound();
-
-            var usuario_general = await _context.UsuariosGenerals.FindAsync(id);
-            if (usuario_general == null) return NotFound();
-
-            return View(usuario_general);
+            if (id == null) return NotFound();
+            var entidad = await _db.usuariosGenerals.FindAsync(id);
+            if (entidad == null) return NotFound();
+            return View("~/Views/usuario_general/Edit.cshtml", entidad);
         }
 
-        // POST: usuario_general/Edit/5
+        // POST: /usuario_general/Edit/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdUser,ContraUser,NombreUser,ApellidoUser,EmailUser,IdRol")]
-        UsuariosGeneral usuario_general)
+        public async Task<IActionResult> Edit(Guid id, usuariosGeneral model)
         {
-            if (id != usuario_general.IdUser) return NotFound();
+            if (id != model.GuidUsuario) return NotFound();
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return View("~/Views/usuario_general/Edit.cshtml", model);
+
+            try
             {
-                try
-                {
-                    _context.Update(usuario_general);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!Exists(usuario_general.IdUser))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                _db.Update(model);
+                await _db.SaveChangesAsync();
             }
-            return View(usuario_general);
+            catch (DbUpdateConcurrencyException)
+            {
+                var existe = await _db.usuariosGenerals.AnyAsync(e => e.GuidUsuario == id);
+                if (!existe) return NotFound();
+                throw;
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
-        // Helper usado en el catch
-        private bool Exists(int id)
+        // GET: /usuario_general/Delete/{id}
+        public async Task<IActionResult> Delete(Guid? id)
         {
-            return _context.UsuariosGenerals.Any(e => e.IdUser == id);
+            if (id == null) return NotFound();
+            var entidad = await _db.usuariosGenerals.FindAsync(id);
+            if (entidad == null) return NotFound();
+            return View("~/Views/usuario_general/Delete.cshtml", entidad);
+        }
+
+        // POST: /usuario_general/Delete/{id}
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        {
+            var entidad = await _db.usuariosGenerals.FindAsync(id);
+            if (entidad != null)
+            {
+                _db.usuariosGenerals.Remove(entidad);
+                await _db.SaveChangesAsync();
+            }
+            return RedirectToAction(nameof(Index));
         }
     }
 }

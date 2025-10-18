@@ -1,94 +1,104 @@
-using enso_Certamen.Models;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Linq; // necesario para Any()
+using enso_Certamen.Models;
 
-namespace suscripcion_general.Controllers
+namespace enso_Certamen.Controllers
 {
     public class suscripcion_generalController : Controller
     {
-        private readonly boletinLayonContext _context;
+        private readonly boletinLayonContext _db;
 
-        public suscripcion_generalController(boletinLayonContext context)
+        public suscripcion_generalController(boletinLayonContext db)
         {
-            _context = context;
+            _db = db;
         }
 
-        // GET: suscripcion_general/Index
+        // GET: /suscripcion_general
         public async Task<IActionResult> Index()
         {
-            return View(await _context.SuscripcionGenerals.ToListAsync());
+            var lista = await _db.suscripcionGenerals
+                                 .OrderByDescending(s => s.fechaSuscripcion)
+                                 .ToListAsync();
+            return View("~/Views/suscripcion_general/Index.cshtml", lista);
         }
 
-        // GET: suscripcion_general/Create
+        // GET: /suscripcion_general/Create
         public IActionResult Create()
         {
-            return View();
+            return View("~/Views/suscripcion_general/Create.cshtml");
         }
 
-        // POST: suscripcion_general/Create
+        // POST: /suscripcion_general/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdSuscripcion,NombreSuscripcion,EmailSuscripcion,FechaSuscripcion,IdBoletin")]
-        SuscripcionGeneral suscripcion_general)
+        public async Task<IActionResult> Create(suscripcionGeneral model)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(suscripcion_general);
-                await _context.SaveChangesAsync();
-                // Mantengo tu patrón: volver al formulario después de crear
-                return RedirectToAction(nameof(Create));
-                // Si prefieres listar: return RedirectToAction(nameof(Index));
-            }
-            return View(suscripcion_general);
+            if (!ModelState.IsValid)
+                return View("~/Views/suscripcion_general/Create.cshtml", model);
+
+            _db.suscripcionGenerals.Add(model);
+            await _db.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: suscripcion_general/Edit/5
-        public async Task<IActionResult> Edit(int id)
+        // GET: /suscripcion_general/Edit/{id}
+        public async Task<IActionResult> Edit(Guid? id)
         {
-            if (id == 0) return NotFound();
-
-            var suscripcion_general = await _context.SuscripcionGenerals.FindAsync(id);
-            if (suscripcion_general == null) return NotFound();
-
-            return View(suscripcion_general);
+            if (id == null) return NotFound();
+            var entidad = await _db.suscripcionGenerals.FindAsync(id);
+            if (entidad == null) return NotFound();
+            return View("~/Views/suscripcion_general/Edit.cshtml", entidad);
         }
 
-        // POST: suscripcion_general/Edit/5
+        // POST: /suscripcion_general/Edit/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdSuscripcion,NombreSuscripcion,EmailSuscripcion,FechaSuscripcion,IdBoletin")]
-        SuscripcionGeneral suscripcion_general)
+        public async Task<IActionResult> Edit(Guid id, suscripcionGeneral model)
         {
-            if (id != suscripcion_general.IdSuscripcion) return NotFound();
+            if (id != model.GuidSuscripcion) return NotFound();
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return View("~/Views/suscripcion_general/Edit.cshtml", model);
+
+            try
             {
-                try
-                {
-                    _context.Update(suscripcion_general);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!Exists(suscripcion_general.IdSuscripcion))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                _db.Update(model);
+                await _db.SaveChangesAsync();
             }
-            return View(suscripcion_general);
+            catch (DbUpdateConcurrencyException)
+            {
+                var existe = await _db.suscripcionGenerals.AnyAsync(e => e.GuidSuscripcion == id);
+                if (!existe) return NotFound();
+                throw;
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
-        // Helper usado en el catch
-        private bool Exists(int id)
+        // GET: /suscripcion_general/Delete/{id}
+        public async Task<IActionResult> Delete(Guid? id)
         {
-            return _context.SuscripcionGenerals.Any(e => e.IdSuscripcion == id);
+            if (id == null) return NotFound();
+            var entidad = await _db.suscripcionGenerals.FindAsync(id);
+            if (entidad == null) return NotFound();
+            return View("~/Views/suscripcion_general/Delete.cshtml", entidad);
+        }
+
+        // POST: /suscripcion_general/Delete/{id}
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        {
+            var entidad = await _db.suscripcionGenerals.FindAsync(id);
+            if (entidad != null)
+            {
+                _db.suscripcionGenerals.Remove(entidad);
+                await _db.SaveChangesAsync();
+            }
+            return RedirectToAction(nameof(Index));
         }
     }
 }

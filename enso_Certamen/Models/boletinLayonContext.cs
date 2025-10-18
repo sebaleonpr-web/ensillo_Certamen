@@ -6,198 +6,73 @@ namespace enso_Certamen.Models;
 
 public partial class boletinLayonContext : DbContext
 {
-    public boletinLayonContext()
-    {
-    }
-
     public boletinLayonContext(DbContextOptions<boletinLayonContext> options)
         : base(options)
     {
     }
 
-    public virtual DbSet<BoletinGeneral> BoletinGenerals { get; set; }
+    public virtual DbSet<boletinGeneral> boletinGenerals { get; set; }
 
-    public virtual DbSet<ComentarioGeneral> ComentarioGenerals { get; set; }
+    public virtual DbSet<comentarioGeneral> comentarioGenerals { get; set; }
 
-    public virtual DbSet<NoticiaGeneral> NoticiaGenerals { get; set; }
+    public virtual DbSet<noticiaGeneral> noticiaGenerals { get; set; }
 
-    public virtual DbSet<RolGeneral> RolGenerals { get; set; }
+    public virtual DbSet<rolGeneral> rolGenerals { get; set; }
+    public object RolGenerals { get; internal set; }
+    public virtual DbSet<suscripcionGeneral> suscripcionGenerals { get; set; }
 
-    public virtual DbSet<SuscripcionGeneral> SuscripcionGenerals { get; set; }
-
-    public virtual DbSet<UsuariosGeneral> UsuariosGenerals { get; set; }
-
+    public virtual DbSet<usuariosGeneral> usuariosGenerals { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<BoletinGeneral>(entity =>
+        modelBuilder.Entity<boletinGeneral>(entity =>
         {
-            entity.HasKey(e => e.IdBoletin);
+            entity.Property(e => e.GuidBoletin).HasDefaultValueSql("(newsequentialid())");
+            entity.Property(e => e.FechaBoletin).HasDefaultValueSql("(CONVERT([date],getdate()))");
 
-            entity.ToTable("boletinGeneral");
+            entity.HasOne(d => d.GuidNoticiaNavigation).WithMany(p => p.boletinGenerals).HasConstraintName("FK_boletinGeneral_Noticia");
+        });
 
-            entity.HasIndex(e => e.GuidBoletin, "UX_boletinGeneral_Guid").IsUnique();
+        modelBuilder.Entity<comentarioGeneral>(entity =>
+        {
+            entity.Property(e => e.GuidComentario).HasDefaultValueSql("(newsequentialid())");
+            entity.Property(e => e.fechaComentario).HasDefaultValueSql("(getdate())");
 
-            entity.Property(e => e.DescripcionBoletin)
-                .HasColumnType("text")
-                .HasColumnName("descripcionBoletin");
-            entity.Property(e => e.FechaBoletin)
-                .HasColumnType("datetime")
-                .HasColumnName("fechaBoletin");
-            entity.Property(e => e.GuidBoletin).HasDefaultValueSql("(newid())");
-            entity.Property(e => e.IdNoticia).HasColumnName("idNoticia");
-            entity.Property(e => e.TituloBoletin)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("tituloBoletin");
-
-            entity.HasOne(d => d.IdNoticiaNavigation).WithMany(p => p.BoletinGenerals)
-                .HasForeignKey(d => d.IdNoticia)
+            entity.HasOne(d => d.GuidNoticiaNavigation).WithMany(p => p.comentarioGenerals)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_BoletinGeneral_NoticiaGeneral");
+                .HasConstraintName("FK_comentarioGeneral_Noticia");
         });
 
-        modelBuilder.Entity<ComentarioGeneral>(entity =>
+        modelBuilder.Entity<noticiaGeneral>(entity =>
         {
-            entity.HasKey(e => e.IdComentario).HasName("PK__comentar__C74515DA4665DA84");
+            entity.Property(e => e.GuidNoticia).HasDefaultValueSql("(newsequentialid())");
+            entity.Property(e => e.fechaNoticia).HasDefaultValueSql("(getdate())");
 
-            entity.ToTable("comentarioGeneral");
-
-            entity.HasIndex(e => e.GuidComentario, "UX_comentarioGeneral_Guid").IsUnique();
-
-            entity.Property(e => e.IdComentario)
-                .ValueGeneratedNever()
-                .HasColumnName("idComentario");
-            entity.Property(e => e.ContenidoComentario)
-                .HasColumnType("text")
-                .HasColumnName("contenidoComentario");
-            entity.Property(e => e.EmailLectorComentario)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("emailLectorComentario");
-            entity.Property(e => e.FechaComentario)
-                .HasColumnType("datetime")
-                .HasColumnName("fechaComentario");
-            entity.Property(e => e.GuidComentario).HasDefaultValueSql("(newid())");
-            entity.Property(e => e.IdNoticia).HasColumnName("idNoticia");
-            entity.Property(e => e.NombrelectorComentario)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("nombrelectorComentario");
+            entity.HasOne(d => d.GuidUsuarioNavigation).WithMany(p => p.noticiaGenerals).HasConstraintName("FK_noticiaGeneral_Usuario");
         });
 
-        modelBuilder.Entity<NoticiaGeneral>(entity =>
+        modelBuilder.Entity<rolGeneral>(entity =>
         {
-            entity.HasKey(e => e.IdNoticia).HasName("PK__noticiaG__F682B59E28F03A23");
-
-            entity.ToTable("noticiaGeneral");
-
-            entity.HasIndex(e => e.TituloNoticia, "UQ__noticiaG__3FD5306E05AE2D0E").IsUnique();
-
-            entity.HasIndex(e => e.GuidNoticia, "UX_noticiaGeneral_Guid").IsUnique();
-
-            entity.Property(e => e.IdNoticia)
-                .ValueGeneratedNever()
-                .HasColumnName("idNoticia");
-            entity.Property(e => e.ContenidoNoticia)
-                .HasColumnType("text")
-                .HasColumnName("contenidoNoticia");
-            entity.Property(e => e.FechaNoticia)
-                .HasColumnType("datetime")
-                .HasColumnName("fechaNoticia");
-            entity.Property(e => e.GuidNoticia).HasDefaultValueSql("(newid())");
-            entity.Property(e => e.IdUser).HasColumnName("idUser");
-            entity.Property(e => e.ResumenNoticia)
-                .HasMaxLength(500)
-                .IsUnicode(false)
-                .HasColumnName("resumenNoticia");
-            entity.Property(e => e.TituloNoticia)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("tituloNoticia");
+            entity.Property(e => e.GuidRol).HasDefaultValueSql("(newsequentialid())");
         });
 
-        modelBuilder.Entity<RolGeneral>(entity =>
+        modelBuilder.Entity<suscripcionGeneral>(entity =>
         {
-            entity.HasKey(e => e.IdRol).HasName("PK__rolGener__3C872F76A605C8CC");
+            entity.Property(e => e.GuidSuscripcion).HasDefaultValueSql("(newsequentialid())");
+            entity.Property(e => e.fechaSuscripcion).HasDefaultValueSql("(getdate())");
 
-            entity.ToTable("rolGeneral");
-
-            entity.HasIndex(e => e.NombreRol, "UQ__rolGener__2787B00CE1CDAF0B").IsUnique();
-
-            entity.HasIndex(e => e.GuidRol, "UX_rolGeneral_Guid").IsUnique();
-
-            entity.Property(e => e.IdRol)
-                .ValueGeneratedNever()
-                .HasColumnName("idRol");
-            entity.Property(e => e.DescripRol)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("descripRol");
-            entity.Property(e => e.GuidRol).HasDefaultValueSql("(newid())");
-            entity.Property(e => e.NombreRol)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("nombreRol");
+            entity.HasOne(d => d.GuidBoletinNavigation).WithMany(p => p.suscripcionGenerals)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_suscripcionGeneral_Boletin");
         });
 
-        modelBuilder.Entity<SuscripcionGeneral>(entity =>
+        modelBuilder.Entity<usuariosGeneral>(entity =>
         {
-            entity.HasKey(e => e.IdSuscripcion).HasName("PK__suscripc__B00C839B8FD1B420");
+            entity.Property(e => e.GuidUsuario).HasDefaultValueSql("(newsequentialid())");
 
-            entity.ToTable("suscripcionGeneral");
-
-            entity.HasIndex(e => e.GuidSuscripcion, "UX_suscripcionGeneral_Guid").IsUnique();
-
-            entity.Property(e => e.IdSuscripcion)
-                .ValueGeneratedNever()
-                .HasColumnName("idSuscripcion");
-            entity.Property(e => e.EmailSuscripcion)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("emailSuscripcion");
-            entity.Property(e => e.FechaSuscripcion)
-                .HasColumnType("datetime")
-                .HasColumnName("fechaSuscripcion");
-            entity.Property(e => e.GuidSuscripcion).HasDefaultValueSql("(newid())");
-            entity.Property(e => e.IdBoletin).HasColumnName("idBoletin");
-            entity.Property(e => e.NombreSuscripcion)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("nombreSuscripcion");
-        });
-
-        modelBuilder.Entity<UsuariosGeneral>(entity =>
-        {
-            entity.HasKey(e => e.IdUser).HasName("PK__usuarios__3717C98289C5971E");
-
-            entity.ToTable("usuariosGeneral");
-
-            entity.HasIndex(e => e.EmailUser, "UQ__usuarios__AF638C4CFE55DE30").IsUnique();
-
-            entity.HasIndex(e => e.GuidUsuario, "UX_usuariosGeneral_Guid").IsUnique();
-
-            entity.Property(e => e.IdUser)
-                .ValueGeneratedNever()
-                .HasColumnName("idUser");
-            entity.Property(e => e.ApellidoUser)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("apellidoUser");
-            entity.Property(e => e.ContraUser)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("contraUser");
-            entity.Property(e => e.EmailUser)
-                .HasMaxLength(30)
-                .IsUnicode(false)
-                .HasColumnName("emailUser");
-            entity.Property(e => e.GuidUsuario).HasDefaultValueSql("(newid())");
-            entity.Property(e => e.IdRol).HasColumnName("idRol");
-            entity.Property(e => e.NombreUser)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("nombreUser");
+            entity.HasOne(d => d.GuidRolNavigation).WithMany(p => p.usuariosGenerals)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_usuariosGeneral_Rol");
         });
 
         OnModelCreatingPartial(modelBuilder);

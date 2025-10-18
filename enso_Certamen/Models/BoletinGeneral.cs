@@ -1,21 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace enso_Certamen.Models;
 
-public partial class BoletinGeneral
+[Table("boletinGeneral")]
+public partial class boletinGeneral
 {
-    public string TituloBoletin { get; set; } = null!;
-
-    public string DescripcionBoletin { get; set; } = null!;
-
-    public DateTime FechaBoletin { get; set; }
-
-    public int IdNoticia { get; set; }
-
-    public int IdBoletin { get; set; }
-
+    [Key]
     public Guid GuidBoletin { get; set; }
 
-    public virtual NoticiaGeneral IdNoticiaNavigation { get; set; } = null!;
+    [StringLength(200)]
+    [Unicode(false)]
+    public string TituloBoletin { get; set; } = null!;
+
+    [StringLength(500)]
+    [Unicode(false)]
+    public string? DescripcionBoletin { get; set; }
+
+    public DateOnly FechaBoletin { get; set; }
+
+    public Guid? GuidNoticia { get; set; }
+
+    [ForeignKey("GuidNoticia")]
+    [InverseProperty("boletinGenerals")]
+    public virtual noticiaGeneral? GuidNoticiaNavigation { get; set; }
+
+    [InverseProperty("GuidBoletinNavigation")]
+    public virtual ICollection<suscripcionGeneral> suscripcionGenerals { get; set; } = new List<suscripcionGeneral>();
 }

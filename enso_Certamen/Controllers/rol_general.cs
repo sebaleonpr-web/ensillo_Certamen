@@ -1,9 +1,11 @@
-using enso_Certamen.Models;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Linq; // necesario para Any()
+using enso_Certamen.Models;
 
-namespace rol_general.Controllers
+namespace enso_Certamen.Controllers
 {
     public class rol_generalController : Controller
     {
@@ -17,7 +19,7 @@ namespace rol_general.Controllers
         // GET: rol_general/Index
         public async Task<IActionResult> Index()
         {
-            return View(await _context.RolGenerals.ToListAsync());
+            return View(await _context.rolGenerals.ToListAsync());
         }
 
         // GET: rol_general/Create
@@ -29,38 +31,34 @@ namespace rol_general.Controllers
         // POST: rol_general/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdRol,NombreRol,DescripRol")]
-        RolGeneral rol_general)
+        public async Task<IActionResult> Create([Bind("GuidRol,NombreRol,DescripRol")] rolGeneral rol_general)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(rol_general);
                 await _context.SaveChangesAsync();
-                // Mantengo tu estilo: redirigir a Create
                 return RedirectToAction(nameof(Create));
-                // Si prefieres listar: return RedirectToAction(nameof(Index));
             }
             return View(rol_general);
         }
 
-        // GET: rol_general/Edit/5
-        public async Task<IActionResult> Edit(int id)
+        // GET: rol_general/Edit/{id}
+        public async Task<IActionResult> Edit(Guid id)
         {
-            if (id == 0) return NotFound();
+            if (id == Guid.Empty) return NotFound();
 
-            var rol_general = await _context.RolGenerals.FindAsync(id);
+            var rol_general = await _context.rolGenerals.FindAsync(id);
             if (rol_general == null) return NotFound();
 
             return View(rol_general);
         }
 
-        // POST: rol_general/Edit/5
+        // POST: rol_general/Edit/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdRol,NombreRol,DescripRol")]
-        RolGeneral rol_general)
+        public async Task<IActionResult> Edit(Guid id, [Bind("GuidRol,NombreRol,DescripRol")] rolGeneral rol_general)
         {
-            if (id != rol_general.IdRol) return NotFound();
+            if (id != rol_general.GuidRol) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -71,24 +69,42 @@ namespace rol_general.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!Exists(rol_general.IdRol))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!Exists(rol_general.GuidRol)) return NotFound();
+                    throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
             return View(rol_general);
         }
 
-        // Helper usado en el catch
-        private bool Exists(int id)
+        // GET: rol_general/Delete/{id}
+        public async Task<IActionResult> Delete(Guid id)
         {
-            return _context.RolGenerals.Any(e => e.IdRol == id);
+            if (id == Guid.Empty) return NotFound();
+
+            var rol_general = await _context.rolGenerals.FindAsync(id);
+            if (rol_general == null) return NotFound();
+
+            return View(rol_general);
+        }
+
+        // POST: rol_general/Delete/{id}
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        {
+            var rol_general = await _context.rolGenerals.FindAsync(id);
+            if (rol_general != null)
+            {
+                _context.rolGenerals.Remove(rol_general);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool Exists(Guid id)
+        {
+            return _context.rolGenerals.Any(e => e.GuidRol == id);
         }
     }
 }

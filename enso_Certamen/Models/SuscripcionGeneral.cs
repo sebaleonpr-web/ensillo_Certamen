@@ -1,19 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace enso_Certamen.Models;
 
-public partial class SuscripcionGeneral
+[Table("suscripcionGeneral")]
+public partial class suscripcionGeneral
 {
-    public int IdSuscripcion { get; set; }
-
-    public string NombreSuscripcion { get; set; } = null!;
-
-    public string EmailSuscripcion { get; set; } = null!;
-
-    public DateTime FechaSuscripcion { get; set; }
-
-    public int IdBoletin { get; set; }
-
+    [Key]
     public Guid GuidSuscripcion { get; set; }
+
+    [StringLength(50)]
+    [Unicode(false)]
+    public string nombreSuscripcion { get; set; } = null!;
+
+    [StringLength(100)]
+    [Unicode(false)]
+    public string emailSuscripcion { get; set; } = null!;
+
+    [Column(TypeName = "datetime")]
+    public DateTime fechaSuscripcion { get; set; }
+
+    public Guid GuidBoletin { get; set; }
+
+    [ForeignKey("GuidBoletin")]
+    [InverseProperty("suscripcionGenerals")]
+    public virtual boletinGeneral GuidBoletinNavigation { get; set; } = null!;
 }
