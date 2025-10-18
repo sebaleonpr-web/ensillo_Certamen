@@ -1,14 +1,14 @@
-@model IEnumerable<enso_Certamen.Models.boletinGeneral>
+@model IEnumerable<enso_Certamen.Models.noticiaGeneral>
 @{
-    ViewData["Title"] = "Boletines";
+    ViewData["Title"] = "Noticias";
 }
 
 <div class="container py-4">
 
-    <h2 class="mb-3">Boletines</h2>
+    <h2 class="mb-3">Noticias</h2>
 
     <p>
-        <a asp-action="Create" class="btn btn-success">Nuevo Boletín</a>
+        <a asp-action="Create" class="btn btn-success">Nueva Noticia</a>
     </p>
 
     <div class="table-responsive">
@@ -16,9 +16,9 @@
             <thead>
                 <tr>
                     <th>Título</th>
-                    <th>Descripción</th>
+                    <th>Resumen</th>
                     <th>Fecha</th>
-                    <th>Noticia</th>
+                    <th>Usuario</th>
                     <th class="text-end"></th>
                 </tr>
             </thead>
@@ -27,7 +27,7 @@
             {
                 <tr>
                     <td colspan="5" class="text-center text-muted py-4">
-                        No hay boletines registrados.
+                        No hay noticias registradas.
                     </td>
                 </tr>
             }
@@ -36,17 +36,16 @@
                 foreach (var item in Model)
                 {
                     <tr>
-                        <td>@item.TituloBoletin</td>
-                        <td>@item.DescripcionBoletin</td>
-                        <td>@item.FechaBoletin.ToString("yyyy-MM-dd")</td>
+                        <td>@item.tituloNoticia</td>
+                        <td>@item.resumenNoticia</td>
+                        <td>@item.fechaNoticia.ToString("yyyy-MM-dd")</td>
                         <td>
-                            @(item.GuidNoticiaNavigation != null
-                                ? item.GuidNoticiaNavigation.tituloNoticia
-                                : "(sin noticia)")
+                            @* Muestra el Guid del usuario (o cámbialo por el nombre si lo tienes en la navegación) *@
+                            @item.GuidUsuario
                         </td>
                         <td class="text-end">
-                            <a asp-action="Edit" asp-route-id="@item.GuidBoletin" class="btn btn-sm btn-primary">Editar</a>
-                            <a asp-action="Delete" asp-route-id="@item.GuidBoletin" class="btn btn-sm btn-danger ms-1">Eliminar</a>
+                            <a asp-action="Edit" asp-route-id="@item.GuidNoticia" class="btn btn-sm btn-primary">Editar</a>
+                            <a asp-action="Delete" asp-route-id="@item.GuidNoticia" class="btn btn-sm btn-danger ms-1">Eliminar</a>
                         </td>
                     </tr>
                 }
@@ -55,3 +54,6 @@
         </table>
     </div>
 </div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
