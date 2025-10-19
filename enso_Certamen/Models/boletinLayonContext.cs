@@ -17,11 +17,11 @@ public partial class boletinLayonContext : DbContext
 
     public virtual DbSet<noticiaGeneral> noticiaGenerals { get; set; }
 
-    public virtual DbSet<rolGeneral> rolGenerals { get; set; }
-    public object RolGenerals { get; internal set; }
+    public virtual DbSet<rolGeneral> rolGenerals { get; set; } = null!;
+
     public virtual DbSet<suscripcionGeneral> suscripcionGenerals { get; set; }
 
-    public virtual DbSet<usuariosGeneral> usuariosGenerals { get; set; }
+    public virtual DbSet<usuariosGeneral> usuariosGenerals { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -70,9 +70,11 @@ public partial class boletinLayonContext : DbContext
         {
             entity.Property(e => e.GuidUsuario).HasDefaultValueSql("(newsequentialid())");
 
-            entity.HasOne(d => d.GuidRolNavigation).WithMany(p => p.usuariosGenerals)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_usuariosGeneral_Rol");
+        entity.HasOne(d => d.GuidRolNavigation)
+            .WithMany(p => p.usuariosGenerals)   // ← ahora compila porque existe la colección
+            .HasForeignKey(d => d.GuidRol)       // ← FK explícita
+            .OnDelete(DeleteBehavior.ClientSetNull) // o .SetNull según tu preferencia
+            .HasConstraintName("FK_usuariosGeneral_Rol");
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -40,9 +40,9 @@ namespace enso_Certamen.Controllers
         public async Task<IActionResult> Index()
         {
             var lista = await _db.noticiaGenerals
-                                 .AsNoTracking()
-                                 .OrderByDescending(n => n.fechaNoticia)
-                                 .ToListAsync();
+                                .AsNoTracking()
+                                .OrderByDescending(n => n.fechaNoticia)
+                                .ToListAsync();
 
             return View("~/Views/noticia_general/Index.cshtml", lista);
         }
@@ -143,8 +143,8 @@ namespace enso_Certamen.Controllers
             if (id == null) return NotFound();
 
             var noticia = await _db.noticiaGenerals
-                                   .AsNoTracking()
-                                   .FirstOrDefaultAsync(n => n.GuidNoticia == id.Value);
+                                .AsNoTracking()
+                                .FirstOrDefaultAsync(n => n.GuidNoticia == id.Value);
             if (noticia == null) return NotFound();
 
             return View("~/Views/noticia_general/Delete.cshtml", noticia);

@@ -21,8 +21,8 @@ namespace enso_Certamen.Controllers
         public async Task<IActionResult> Index()
         {
             var lista = await _db.comentarioGenerals
-                                 .OrderByDescending(c => c.fechaComentario)
-                                 .ToListAsync();
+                                .OrderByDescending(c => c.fechaComentario)
+                                .ToListAsync();
 
             return View("~/Views/comentario_general/Index.cshtml", lista);
         }
@@ -137,13 +137,13 @@ namespace enso_Certamen.Controllers
             // Si tienes un campo de título en noticiaGeneral, puedes reemplazar "Texto = n.GuidNoticia.ToString()"
             // por "Texto = n.tituloNoticia" para mostrar el título en el dropdown.
             var noticias = _db.noticiaGenerals
-                              .OrderBy(n => n.GuidNoticia)
-                              .Select(n => new
-                              {
-                                  n.GuidNoticia,
-                                  Texto = n.GuidNoticia.ToString()
-                              })
-                              .ToList();
+                            .OrderBy(n => n.GuidNoticia)
+                            .Select(n => new
+                            {
+                                n.GuidNoticia,
+                                Texto = n.GuidNoticia.ToString()
+                            })
+                            .ToList();
 
             ViewBag.Noticias = new SelectList(noticias, "GuidNoticia", "Texto", seleccion);
         }

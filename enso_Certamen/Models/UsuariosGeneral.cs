@@ -28,11 +28,11 @@ public partial class usuariosGeneral
     [Unicode(false)]
     public string emailUser { get; set; } = null!;
 
-    public Guid GuidRol { get; set; }
+    public Guid? GuidRol { get; set; }   
 
-    [ForeignKey("GuidRol")]
-    [InverseProperty("usuariosGenerals")]
-    public virtual rolGeneral GuidRolNavigation { get; set; } = null!;
+        [ForeignKey("GuidRol")]
+        [InverseProperty("usuariosGenerals")]
+        public virtual rolGeneral? GuidRolNavigation { get; set; }
 
     [InverseProperty("GuidUsuarioNavigation")]
     public virtual ICollection<noticiaGeneral> noticiaGenerals { get; set; } = new List<noticiaGeneral>();
