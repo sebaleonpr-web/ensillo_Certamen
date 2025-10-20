@@ -1,4 +1,5 @@
 @model IEnumerable<enso_Certamen.Models.boletinGeneral>
+
 @{
     ViewData["Title"] = "Boletines";
 }
@@ -43,7 +44,7 @@
                         <td>@item.TituloBoletin</td>
                         <td>@item.DescripcionBoletin</td>
                         <td>@item.FechaBoletin.ToString("yyyy-MM-dd")</td>
-                        <td>@item.GuidNoticia</td> @* Cambia a NoticiaId si tu propiedad se llama así *@
+                        <td>@item.GuidNoticiaNavigation.tituloNoticia</td> @* Cambia a NoticiaId si tu propiedad se llama así *@
                         <td class="text-end">
                             <a asp-action="Edit" asp-route-id="@item.GuidBoletin" class="btn btn-sm btn-primary">Editar</a>
                             <a asp-action="Delete" asp-route-id="@item.GuidBoletin" class="btn btn-sm btn-danger ms-1">Eliminar</a>
