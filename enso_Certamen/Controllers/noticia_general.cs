@@ -145,6 +145,7 @@ namespace enso_Certamen.Controllers
             var noticia = await _db.noticiaGenerals
                                 .AsNoTracking()
                                 .FirstOrDefaultAsync(n => n.GuidNoticia == id.Value);
+                                
             if (noticia == null) return NotFound();
 
             return View("~/Views/noticia_general/Delete.cshtml", noticia);
@@ -156,7 +157,6 @@ namespace enso_Certamen.Controllers
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var noticia = await _db.noticiaGenerals.FindAsync(id);
-            if (noticia == null) return RedirectToAction(nameof(Index));
 
             try
             {
