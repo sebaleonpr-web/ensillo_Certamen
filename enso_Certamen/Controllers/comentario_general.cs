@@ -18,11 +18,14 @@ namespace enso_Certamen.Controllers
         }
 
         // GET: /comentario_general
+        // Tabla de comentarios — ordenados por fecha desc
         public async Task<IActionResult> Index()
         {
             var lista = await _db.comentarioGenerals
-                                .OrderByDescending(c => c.fechaComentario)
-                                .ToListAsync();
+                .AsNoTracking()
+                .Include(c => c.GuidNoticiaNavigation) // 🔹 por si la vista muestra el título de la noticia
+                .OrderByDescending(c => c.fechaComentario)
+                .ToListAsync();
 
             return View("~/Views/comentario_general/Index.cshtml", lista);
         }
@@ -39,7 +42,7 @@ namespace enso_Certamen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("nombrelectorComentario,emailLectorComentario,contenidoComentario,fechaComentario,GuidNoticia")] comentarioGeneral model)
         {
-            // Validaciones simples para evitar fechas absurdas
+            // Validación simple de rango de año (opcional)
             if (model.fechaComentario.Year < 1900 || model.fechaComentario.Year > 2100)
             {
                 ModelState.AddModelError(nameof(model.fechaComentario), "La fecha es inválida. Usa un año razonable (1900–2100).");
@@ -51,11 +54,12 @@ namespace enso_Certamen.Controllers
                 return View("~/Views/comentario_general/Create.cshtml", model);
             }
 
-            // Asignar GUID si no lo genera la BD
-            model.GuidComentario = Guid.NewGuid();
+            if (model.GuidComentario == Guid.Empty)
+                model.GuidComentario = Guid.NewGuid();
 
             _db.comentarioGenerals.Add(model);
             await _db.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -98,7 +102,7 @@ namespace enso_Certamen.Controllers
             {
                 var existe = await _db.comentarioGenerals.AnyAsync(c => c.GuidComentario == model.GuidComentario);
                 if (!existe) return NotFound();
-                throw;
+                throw; // mismo criterio que usas en boletin_general
             }
 
             return RedirectToAction(nameof(Index));
@@ -109,7 +113,11 @@ namespace enso_Certamen.Controllers
         {
             if (id == null) return NotFound();
 
-            var entidad = await _db.comentarioGenerals.FindAsync(id.Value);
+            var entidad = await _db.comentarioGenerals
+                .AsNoTracking()
+                .Include(c => c.GuidNoticiaNavigation)
+                .FirstOrDefaultAsync(c => c.GuidComentario == id.Value);
+
             if (entidad == null) return NotFound();
 
             return View("~/Views/comentario_general/Delete.cshtml", entidad);
@@ -134,16 +142,15 @@ namespace enso_Certamen.Controllers
         // ======================
         private void CargarSelectNoticias(Guid? seleccion = null)
         {
-            // Si tienes un campo de título en noticiaGeneral, puedes reemplazar "Texto = n.GuidNoticia.ToString()"
-            // por "Texto = n.tituloNoticia" para mostrar el título en el dropdown.
             var noticias = _db.noticiaGenerals
-                            .OrderBy(n => n.GuidNoticia)
-                            .Select(n => new
-                            {
-                                n.GuidNoticia,
-                                Texto = n.GuidNoticia.ToString()
-                            })
-                            .ToList();
+                .AsNoTracking()
+                .OrderBy(n => n.tituloNoticia)
+                .Select(n => new
+                {
+                    n.GuidNoticia,
+                    Texto = n.tituloNoticia
+                })
+                .ToList();
 
             ViewBag.Noticias = new SelectList(noticias, "GuidNoticia", "Texto", seleccion);
         }

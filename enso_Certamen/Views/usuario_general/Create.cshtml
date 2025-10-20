@@ -35,12 +35,15 @@
             </div>
 
             <div class="mb-4">
-                <label asp-for="GuidRol" class="form-label">Rol</label>
-                <select asp-for="GuidRol" asp-items="ViewBag.Roles" class="form-control">
-                    <option value="" selected disabled hidden>-- Selecciona un rol --</option>
-                </select>
-                <span asp-validation-for="GuidRol" class="text-danger"></span>
+            <label asp-for="GuidRol" class="form-label">Rol (opcional)</label>
+            <select asp-for="GuidRol"
+                    class="form-select"
+                    asp-items="@(ViewBag.Roles as IEnumerable<SelectListItem> ?? new List<SelectListItem>())">
+                <option value="">— Sin rol —</option>
+            </select>
+            <span asp-validation-for="GuidRol" class="text-danger"></span>
             </div>
+
 
             <div class="d-flex gap-2">
                 <button type="submit" class="btn btn-primary">Crear Usuario</button>

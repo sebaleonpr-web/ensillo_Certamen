@@ -23,12 +23,16 @@ namespace enso_Certamen.Controllers
         public async Task<IActionResult> Index()
         {
             var lista = await _db.boletinGenerals
-            .Include(b => b.GuidNoticiaNavigation)
-                                .OrderByDescending(b => b.FechaBoletin)
-                                .ToListAsync();
+                .AsNoTracking()
+                .Include(b => b.GuidNoticiaNavigation) // 🔹 carga la noticia vinculada
+                .OrderByDescending(b => b.FechaBoletin)
+                .ToListAsync();
+
             return View("~/Views/boletin_general/Index.cshtml", lista);
         }
 
+
+        
         //GET: /boletin_general/Create
         //Al presionar el boton de crear en la vista Index.cshtml
         //carga el combo de noticias

@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -17,42 +18,45 @@ namespace enso_Certamen.Controllers
             _db = db;
         }
 
-        // Utilidad: carga dropdown de usuarios (usa Guid como texto si no tienes nombre/email)
+        // ---------- Helpers ----------
         private async Task CargarUsuariosAsync(Guid? seleccionado = null)
         {
-            var usuarios = await _db.usuariosGenerals
-                                    .Select(u => new { u.GuidUsuario })
-                                    .ToListAsync();
+            var items = await _db.usuariosGenerals
+                                 .AsNoTracking()
+                                 .Select(u => new SelectListItem
+                                 {
+                                     Value    = u.GuidUsuario.ToString(),
+                                     Text     = u.GuidUsuario.ToString(), // cámbialo si tienes nombre/email
+                                     Selected = seleccionado.HasValue && u.GuidUsuario == seleccionado.Value
+                                 })
+                                 .ToListAsync();
 
-            ViewBag.Usuarios = new SelectList(usuarios, "GuidUsuario", "GuidUsuario", seleccionado);
+            ViewBag.Usuarios = items ?? new List<SelectListItem>(); // nunca null
         }
 
-        // Validación simple de fecha (evita años tipo 1111)
         private void ValidarFecha(DateTime fecha, string keyField = "fechaNoticia")
         {
             if (fecha.Year < 1900 || fecha.Year > 2100)
-            {
                 ModelState.AddModelError(keyField, "La fecha debe estar entre 1900 y 2100.");
-            }
         }
 
+        // ---------- Index ----------
         // GET: /noticia_general
         public async Task<IActionResult> Index()
         {
             var lista = await _db.noticiaGenerals
-                                .AsNoTracking()
-                                .OrderByDescending(n => n.fechaNoticia)
-                                .ToListAsync();
+                                 .AsNoTracking()
+                                 .OrderByDescending(n => n.fechaNoticia)
+                                 .ToListAsync();
 
             return View("~/Views/noticia_general/Index.cshtml", lista);
         }
 
+        // ---------- Create ----------
         // GET: /noticia_general/Create
         public async Task<IActionResult> Create()
         {
             await CargarUsuariosAsync();
-            // Si quieres sugerir fecha de hoy en el form, puedes pasar un modelo con fecha hoy:
-            // return View("~/Views/noticia_general/Create.cshtml", new noticiaGeneral { fechaNoticia = DateTime.Today });
             return View("~/Views/noticia_general/Create.cshtml");
         }
 
@@ -61,6 +65,11 @@ namespace enso_Certamen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("GuidNoticia,tituloNoticia,resumenNoticia,contenidoNoticia,fechaNoticia,GuidUsuario")] noticiaGeneral model)
         {
+            // Normalizaciones
+            if (model.GuidUsuario == Guid.Empty) model.GuidUsuario = null; // si es opcional en tu modelo/DB
+            if (model.GuidNoticia == Guid.Empty) model.GuidNoticia = Guid.NewGuid();
+            if (model.fechaNoticia == default)   model.fechaNoticia = DateTime.Today;
+
             ValidarFecha(model.fechaNoticia);
 
             if (!ModelState.IsValid)
@@ -68,10 +77,6 @@ namespace enso_Certamen.Controllers
                 await CargarUsuariosAsync(model.GuidUsuario);
                 return View("~/Views/noticia_general/Create.cshtml", model);
             }
-
-            // Generar Guid si viene vacío (Guid default)
-            if (model.GuidNoticia == Guid.Empty)
-                model.GuidNoticia = Guid.NewGuid();
 
             try
             {
@@ -87,6 +92,7 @@ namespace enso_Certamen.Controllers
             }
         }
 
+        // ---------- Edit ----------
         // GET: /noticia_general/Edit/{id}
         public async Task<IActionResult> Edit(Guid? id)
         {
@@ -105,6 +111,9 @@ namespace enso_Certamen.Controllers
         public async Task<IActionResult> Edit(Guid id, [Bind("GuidNoticia,tituloNoticia,resumenNoticia,contenidoNoticia,fechaNoticia,GuidUsuario")] noticiaGeneral model)
         {
             if (id != model.GuidNoticia) return NotFound();
+
+            if (model.GuidUsuario == Guid.Empty) model.GuidUsuario = null; // opcional
+            if (model.fechaNoticia == default)   model.fechaNoticia = DateTime.Today;
 
             ValidarFecha(model.fechaNoticia);
 
@@ -137,15 +146,15 @@ namespace enso_Certamen.Controllers
             }
         }
 
+        // ---------- Delete ----------
         // GET: /noticia_general/Delete/{id}
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null) return NotFound();
 
             var noticia = await _db.noticiaGenerals
-                                .AsNoTracking()
-                                .FirstOrDefaultAsync(n => n.GuidNoticia == id.Value);
-                                
+                                   .AsNoTracking()
+                                   .FirstOrDefaultAsync(n => n.GuidNoticia == id.Value);
             if (noticia == null) return NotFound();
 
             return View("~/Views/noticia_general/Delete.cshtml", noticia);
@@ -157,6 +166,7 @@ namespace enso_Certamen.Controllers
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var noticia = await _db.noticiaGenerals.FindAsync(id);
+            if (noticia == null) return NotFound();
 
             try
             {
@@ -166,7 +176,7 @@ namespace enso_Certamen.Controllers
             }
             catch (DbUpdateException)
             {
-                // Por ejemplo, si hay FK (comentarios/boletines) que bloquean el borrado
+                // FK (comentarios, boletines) pueden bloquear el borrado
                 ModelState.AddModelError(string.Empty, "No se pudo eliminar la noticia (posibles referencias).");
                 return View("~/Views/noticia_general/Delete.cshtml", noticia);
             }

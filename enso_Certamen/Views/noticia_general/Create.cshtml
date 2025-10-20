@@ -30,17 +30,18 @@
 
             <div class="mb-3">
                 <label asp-for="fechaNoticia" class="form-label">Fecha</label>
-                <input asp-for="fechaNoticia" type="date" class="form-control" />
+                    <input asp-for="fechaNoticia" type="date" class="form-control" />
                 <span asp-validation-for="fechaNoticia" class="text-danger"></span>
             </div>
 
-            <div class="mb-4">
-                <label asp-for="GuidUsuario" class="form-label">Usuario</label>
-                <select asp-for="GuidUsuario" asp-items="ViewBag.Usuarios" class="form-control">
-                    <option value="" selected disabled hidden>-- Selecciona un usuario --</option>
-                </select>
-                <span asp-validation-for="GuidUsuario" class="text-danger"></span>
-            </div>
+        @using Microsoft.AspNetCore.Mvc.Rendering
+        @{
+            var usuariosItems = ViewBag.Usuarios as IEnumerable<SelectListItem> ?? Enumerable.Empty<SelectListItem>();
+        }
+        <select asp-for="GuidUsuario" class="form-select" asp-items="usuariosItems">
+            <option value="">— Sin usuario —</option> <!-- si es opcional -->
+        </select>
+
 
             <div class="d-flex gap-2">
                 <button type="submit" class="btn btn-primary">Crear Noticia</button>

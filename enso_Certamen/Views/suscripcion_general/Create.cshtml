@@ -28,13 +28,12 @@
                 <span asp-validation-for="fechaSuscripcion" class="text-danger"></span>
             </div>
 
-            <div class="mb-4">
-                <label asp-for="GuidBoletin" class="form-label">Boletín</label>
-                <select asp-for="GuidBoletin" asp-items="ViewBag.Boletines" class="form-control">
-                    <option value="" selected disabled hidden>-- Selecciona un boletín --</option>
-                </select>
-                <span asp-validation-for="GuidBoletin" class="text-danger"></span>
-            </div>
+            <label asp-for="GuidBoletin" class="form-label">Boletín</label>
+            <select asp-for="GuidBoletin" class="form-select" asp-items="ViewBag.Boletines">
+                <option value="">-- Sin boletín --</option>  @* ← habilita null *@
+            </select>
+            <span asp-validation-for="GuidBoletin" class="text-danger"></span>
+
 
             <div class="d-flex gap-2">
                 <button type="submit" class="btn btn-primary">Crear Suscripción</button>

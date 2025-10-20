@@ -5,7 +5,6 @@
 }
 
 <div class="container py-4">
-
     <h2 class="mb-3">Boletines</h2>
 
     <p>
@@ -24,11 +23,8 @@
                 </tr>
             </thead>
             <tbody>
-            
             @if (Model == null || !Model.Any())
             {
-                @* Busca en la lista del controllador si existe*@
-                @**No tiene valores*@
                 <tr>
                     <td colspan="5" class="text-center text-muted py-4">
                         No hay boletines registrados.
@@ -37,14 +33,13 @@
             }
             else
             {
-                @*Carga *@
                 foreach (var item in Model)
                 {
                     <tr>
                         <td>@item.TituloBoletin</td>
                         <td>@item.DescripcionBoletin</td>
                         <td>@item.FechaBoletin.ToString("yyyy-MM-dd")</td>
-                        <td>@item.GuidNoticiaNavigation.tituloNoticia</td> @* Cambia a NoticiaId si tu propiedad se llama así *@
+                        <td>@(item.GuidNoticiaNavigation?.tituloNoticia ?? "Sin noticia")</td>
                         <td class="text-end">
                             <a asp-action="Edit" asp-route-id="@item.GuidBoletin" class="btn btn-sm btn-primary">Editar</a>
                             <a asp-action="Delete" asp-route-id="@item.GuidBoletin" class="btn btn-sm btn-danger ms-1">Eliminar</a>
@@ -55,5 +50,4 @@
             </tbody>
         </table>
     </div>
-
 </div>

@@ -20,9 +20,9 @@ public partial class suscripcionGeneral
     [Column(TypeName = "datetime")]
     public DateTime fechaSuscripcion { get; set; }
 
-    public Guid GuidBoletin { get; set; }
+    public Guid? GuidBoletin { get; set; }
 
     [ForeignKey("GuidBoletin")]
     [InverseProperty("suscripcionGenerals")]
-    public virtual boletinGeneral GuidBoletinNavigation { get; set; } = null!;
+    public virtual boletinGeneral? GuidBoletinNavigation { get; set; }
 }
