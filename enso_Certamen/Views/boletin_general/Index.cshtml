@@ -23,8 +23,11 @@
                 </tr>
             </thead>
             <tbody>
+            
             @if (Model == null || !Model.Any())
             {
+                @* Busca en la lista del controllador si existe*@
+                @**No tiene valores*@
                 <tr>
                     <td colspan="5" class="text-center text-muted py-4">
                         No hay boletines registrados.
@@ -33,6 +36,7 @@
             }
             else
             {
+                @*Carga *@
                 foreach (var item in Model)
                 {
                     <tr>

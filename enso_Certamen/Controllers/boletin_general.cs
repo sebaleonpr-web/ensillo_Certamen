@@ -19,7 +19,7 @@ namespace enso_Certamen.Controllers
 
 
         //GET: /boletin_general
-        //Tabla de boletines, Index.cshtml
+        //Tabla de boletines, Index.cshtml        //Carga la lista de boletines ordenados por fecha descendente
         public async Task<IActionResult> Index()
         {
             var lista = await _db.boletinGenerals

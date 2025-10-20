@@ -7,6 +7,8 @@
     <div class="mx-auto" style="max-width: 900px;">
         <h2 class="mb-4">Crear Boletín</h2>
 
+        @*Al presionar crear boletin cargara metodo post que guarda en db*@
+        @*Esto carga hacia abajo*@
         <form asp-action="Create" method="post">
             @Html.AntiForgeryToken()
 
@@ -31,12 +33,13 @@
             <div class="mb-4">
                 <label asp-for="GuidNoticia" class="form-label">Noticia</label>
                 <select asp-for="GuidNoticia" asp-items="ViewBag.Noticias" class="form-control">
-                    <option value="" selected disabled hidden>-- Selecciona una noticia --</option>
+                    <option value="" selected disabled hidden> Selecciona una noticia </option>
                 </select>
                 <span asp-validation-for="GuidNoticia" class="text-danger"></span>
             </div>
 
             <div class="d-flex gap-2">
+            @*Submit dira que cargue el post*@
                 <button type="submit" class="btn btn-primary">Crear Boletín</button>
                 <a asp-action="Index" class="btn btn-secondary">Volver</a>
             </div>
