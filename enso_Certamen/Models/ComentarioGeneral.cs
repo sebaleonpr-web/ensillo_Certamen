@@ -26,6 +26,7 @@ public partial class comentarioGeneral
     [Column(TypeName = "datetime")]
     public DateTime fechaComentario { get; set; }
 
+
     public Guid? GuidNoticia { get; set; }
 
     [ForeignKey("GuidNoticia")]

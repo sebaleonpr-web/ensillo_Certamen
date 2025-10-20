@@ -18,12 +18,11 @@ namespace enso_Certamen.Controllers
         }
 
         // GET: /comentario_general
-        // Tabla de comentarios — ordenados por fecha desc
         public async Task<IActionResult> Index()
         {
             var lista = await _db.comentarioGenerals
                 .AsNoTracking()
-                .Include(c => c.GuidNoticiaNavigation) // 🔹 por si la vista muestra el título de la noticia
+                .Include(c => c.GuidNoticiaNavigation)
                 .OrderByDescending(c => c.fechaComentario)
                 .ToListAsync();
 
@@ -33,7 +32,14 @@ namespace enso_Certamen.Controllers
         // GET: /comentario_general/Create
         public IActionResult Create()
         {
-            CargarSelectNoticias();
+            ViewBag.Noticias = new SelectList(
+                _db.noticiaGenerals
+                   .AsNoTracking()
+                   .OrderBy(n => n.tituloNoticia)
+                   .Select(n => new { n.GuidNoticia, Texto = n.tituloNoticia }),
+                "GuidNoticia", "Texto"
+            );
+
             return View("~/Views/comentario_general/Create.cshtml");
         }
 
@@ -42,15 +48,16 @@ namespace enso_Certamen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("nombrelectorComentario,emailLectorComentario,contenidoComentario,fechaComentario,GuidNoticia")] comentarioGeneral model)
         {
-            // Validación simple de rango de año (opcional)
-            if (model.fechaComentario.Year < 1900 || model.fechaComentario.Year > 2100)
-            {
-                ModelState.AddModelError(nameof(model.fechaComentario), "La fecha es inválida. Usa un año razonable (1900–2100).");
-            }
-
             if (!ModelState.IsValid)
             {
-                CargarSelectNoticias(model.GuidNoticia);
+                ViewBag.Noticias = new SelectList(
+                    _db.noticiaGenerals
+                       .AsNoTracking()
+                       .OrderBy(n => n.tituloNoticia)
+                       .Select(n => new { n.GuidNoticia, Texto = n.tituloNoticia }),
+                    "GuidNoticia", "Texto", model.GuidNoticia
+                );
+
                 return View("~/Views/comentario_general/Create.cshtml", model);
             }
 
@@ -71,7 +78,14 @@ namespace enso_Certamen.Controllers
             var entidad = await _db.comentarioGenerals.FindAsync(id.Value);
             if (entidad == null) return NotFound();
 
-            CargarSelectNoticias(entidad.GuidNoticia);
+            ViewBag.Noticias = new SelectList(
+                _db.noticiaGenerals
+                   .AsNoTracking()
+                   .OrderBy(n => n.tituloNoticia)
+                   .Select(n => new { n.GuidNoticia, Texto = n.tituloNoticia }),
+                "GuidNoticia", "Texto", entidad.GuidNoticia
+            );
+
             return View("~/Views/comentario_general/Edit.cshtml", entidad);
         }
 
@@ -82,14 +96,16 @@ namespace enso_Certamen.Controllers
         {
             if (id != model.GuidComentario) return NotFound();
 
-            if (model.fechaComentario.Year < 1900 || model.fechaComentario.Year > 2100)
-            {
-                ModelState.AddModelError(nameof(model.fechaComentario), "La fecha es inválida. Usa un año razonable (1900–2100).");
-            }
-
             if (!ModelState.IsValid)
             {
-                CargarSelectNoticias(model.GuidNoticia);
+                ViewBag.Noticias = new SelectList(
+                    _db.noticiaGenerals
+                       .AsNoTracking()
+                       .OrderBy(n => n.tituloNoticia)
+                       .Select(n => new { n.GuidNoticia, Texto = n.tituloNoticia }),
+                    "GuidNoticia", "Texto", model.GuidNoticia
+                );
+
                 return View("~/Views/comentario_general/Edit.cshtml", model);
             }
 
@@ -102,7 +118,7 @@ namespace enso_Certamen.Controllers
             {
                 var existe = await _db.comentarioGenerals.AnyAsync(c => c.GuidComentario == model.GuidComentario);
                 if (!existe) return NotFound();
-                throw; // mismo criterio que usas en boletin_general
+                throw;
             }
 
             return RedirectToAction(nameof(Index));
@@ -135,24 +151,6 @@ namespace enso_Certamen.Controllers
                 await _db.SaveChangesAsync();
             }
             return RedirectToAction(nameof(Index));
-        }
-
-        // ======================
-        // Helpers
-        // ======================
-        private void CargarSelectNoticias(Guid? seleccion = null)
-        {
-            var noticias = _db.noticiaGenerals
-                .AsNoTracking()
-                .OrderBy(n => n.tituloNoticia)
-                .Select(n => new
-                {
-                    n.GuidNoticia,
-                    Texto = n.tituloNoticia
-                })
-                .ToList();
-
-            ViewBag.Noticias = new SelectList(noticias, "GuidNoticia", "Texto", seleccion);
         }
     }
 }
