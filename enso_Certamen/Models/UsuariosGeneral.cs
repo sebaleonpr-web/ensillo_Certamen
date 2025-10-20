@@ -26,9 +26,10 @@ public partial class usuariosGeneral
 
     [StringLength(100)]
     [Unicode(false)]
+    [EmailAddress(ErrorMessage = "El formato del correo no es válido.")]
     public string emailUser { get; set; } = null!;
 
-    public Guid? GuidRol { get; set; }   
+    public Guid? GuidRol { get; set; } = null!; 
 
         [ForeignKey("GuidRol")]
         [InverseProperty("usuariosGenerals")]

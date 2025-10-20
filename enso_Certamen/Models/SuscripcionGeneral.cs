@@ -12,12 +12,9 @@ public partial class suscripcionGeneral
     [Key]
     public Guid GuidSuscripcion { get; set; }
 
-    [StringLength(50)]
-    [Unicode(false)]
     public string nombreSuscripcion { get; set; } = null!;
 
-    [StringLength(100)]
-    [Unicode(false)]
+    [EmailAddress(ErrorMessage = "El formato del correo no es válido.")]
     public string emailSuscripcion { get; set; } = null!;
 
     [Column(TypeName = "datetime")]
