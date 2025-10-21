@@ -35,15 +35,13 @@
                 <span asp-validation-for="fechaComentario" class="text-danger"></span>
             </div>
 
-
             <div class="mb-3">
                 <label asp-for="GuidNoticia" class="form-label">Noticia</label>
-                <select asp-for="GuidNoticia" class="form-select" asp-items="@(ViewBag.Noticias as IEnumerable<SelectListItem>)">
-                    <option value="">-- Selecciona una noticia --</option>
+                <select asp-for="GuidNoticia" class="form-select" asp-items="ViewBag.Noticias">
+                    <option value="@Guid.Empty">-- Selecciona una noticia --</option>
                 </select>
                 <span asp-validation-for="GuidNoticia" class="text-danger"></span>
             </div>
-
 
             <div class="d-flex gap-2">
                 <button type="submit" class="btn btn-primary">Guardar cambios</button>
@@ -52,6 +50,7 @@
         </form>
     </div>
 </div>
+
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

@@ -34,9 +34,9 @@ namespace enso_Certamen.Controllers
         {
             ViewBag.Noticias = new SelectList(
                 _db.noticiaGenerals
-                   .AsNoTracking()
-                   .OrderBy(n => n.tituloNoticia)
-                   .Select(n => new { n.GuidNoticia, Texto = n.tituloNoticia }),
+                .AsNoTracking()
+                .OrderBy(n => n.tituloNoticia)
+                .Select(n => new { n.GuidNoticia, Texto = n.tituloNoticia }),
                 "GuidNoticia", "Texto"
             );
 
@@ -48,16 +48,18 @@ namespace enso_Certamen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("nombrelectorComentario,emailLectorComentario,contenidoComentario,fechaComentario,GuidNoticia")] comentarioGeneral model)
         {
+            // 👇 Normaliza el combo: Guid.Empty => null
+            if (!model.GuidNoticia.HasValue || model.GuidNoticia.Value == Guid.Empty)
+                model.GuidNoticia = null;
+
             if (!ModelState.IsValid)
             {
                 ViewBag.Noticias = new SelectList(
-                    _db.noticiaGenerals
-                       .AsNoTracking()
-                       .OrderBy(n => n.tituloNoticia)
-                       .Select(n => new { n.GuidNoticia, Texto = n.tituloNoticia }),
+                    _db.noticiaGenerals.AsNoTracking()
+                        .OrderBy(n => n.tituloNoticia)
+                        .Select(n => new { n.GuidNoticia, Texto = n.tituloNoticia }),
                     "GuidNoticia", "Texto", model.GuidNoticia
                 );
-
                 return View("~/Views/comentario_general/Create.cshtml", model);
             }
 
@@ -66,9 +68,9 @@ namespace enso_Certamen.Controllers
 
             _db.comentarioGenerals.Add(model);
             await _db.SaveChangesAsync();
-
             return RedirectToAction(nameof(Index));
         }
+
 
         // GET: /comentario_general/Edit/{id}
         public async Task<IActionResult> Edit(Guid? id)
@@ -80,9 +82,9 @@ namespace enso_Certamen.Controllers
 
             ViewBag.Noticias = new SelectList(
                 _db.noticiaGenerals
-                   .AsNoTracking()
-                   .OrderBy(n => n.tituloNoticia)
-                   .Select(n => new { n.GuidNoticia, Texto = n.tituloNoticia }),
+                .AsNoTracking()
+                .OrderBy(n => n.tituloNoticia)
+                .Select(n => new { n.GuidNoticia, Texto = n.tituloNoticia }),
                 "GuidNoticia", "Texto", entidad.GuidNoticia
             );
 
@@ -96,16 +98,18 @@ namespace enso_Certamen.Controllers
         {
             if (id != model.GuidComentario) return NotFound();
 
+            // 👇 Igual que en Create
+            if (!model.GuidNoticia.HasValue || model.GuidNoticia.Value == Guid.Empty)
+                model.GuidNoticia = null;
+
             if (!ModelState.IsValid)
             {
                 ViewBag.Noticias = new SelectList(
-                    _db.noticiaGenerals
-                       .AsNoTracking()
-                       .OrderBy(n => n.tituloNoticia)
-                       .Select(n => new { n.GuidNoticia, Texto = n.tituloNoticia }),
+                    _db.noticiaGenerals.AsNoTracking()
+                        .OrderBy(n => n.tituloNoticia)
+                        .Select(n => new { n.GuidNoticia, Texto = n.tituloNoticia }),
                     "GuidNoticia", "Texto", model.GuidNoticia
                 );
-
                 return View("~/Views/comentario_general/Edit.cshtml", model);
             }
 
@@ -123,6 +127,7 @@ namespace enso_Certamen.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
 
         // GET: /comentario_general/Delete/{id}
         public async Task<IActionResult> Delete(Guid? id)
