@@ -46,8 +46,8 @@
                             }
                             @preview
                         </td>
-                        <td>@item.fechaComentario.ToString("yyyy-MM-dd HH:mm")</td>
-                        <td>@item.GuidNoticia</td>
+                        <td>@item.fechaComentario.ToString("yyyy-MM-dd")</td>
+                        <td>@(item.GuidNoticiaNavigation?.tituloNoticia?? "Sin Noticia")</td>
                         <td class="text-end">
                             <a asp-action="Edit" asp-route-id="@item.GuidComentario" class="btn btn-sm btn-primary">Editar</a>
                             <a asp-action="Delete" asp-route-id="@item.GuidComentario" class="btn btn-sm btn-danger ms-1">Eliminar</a>
