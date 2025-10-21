@@ -22,14 +22,14 @@ namespace enso_Certamen.Controllers
         private async Task CargarUsuariosAsync(Guid? seleccionado = null)
         {
             var items = await _db.usuariosGenerals
-                                 .AsNoTracking()
-                                 .Select(u => new SelectListItem
-                                 {
-                                     Value    = u.GuidUsuario.ToString(),
+                                .AsNoTracking()
+                                .Select(u => new SelectListItem
+                                {
+                                    Value    = u.GuidUsuario.ToString(),
                                      Text     = u.GuidUsuario.ToString(), // cámbialo si tienes nombre/email
-                                     Selected = seleccionado.HasValue && u.GuidUsuario == seleccionado.Value
-                                 })
-                                 .ToListAsync();
+                                    Selected = seleccionado.HasValue && u.GuidUsuario == seleccionado.Value
+                                })
+                                .ToListAsync();
 
             ViewBag.Usuarios = items ?? new List<SelectListItem>(); // nunca null
         }
@@ -45,9 +45,10 @@ namespace enso_Certamen.Controllers
         public async Task<IActionResult> Index()
         {
             var lista = await _db.noticiaGenerals
-                                 .AsNoTracking()
-                                 .OrderByDescending(n => n.fechaNoticia)
-                                 .ToListAsync();
+                                .AsNoTracking()
+                                .Include(n => n.GuidUsuarioNavigation)
+                                .OrderByDescending(n => n.fechaNoticia)
+                                .ToListAsync();
 
             return View("~/Views/noticia_general/Index.cshtml", lista);
         }

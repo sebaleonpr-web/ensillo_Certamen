@@ -39,10 +39,7 @@
                         <td>@item.tituloNoticia</td>
                         <td>@item.resumenNoticia</td>
                         <td>@item.fechaNoticia.ToString("yyyy-MM-dd")</td>
-                        <td>
-                            @* Muestra el Guid del usuario (o cámbialo por el nombre si lo tienes en la navegación) *@
-                            @item.GuidUsuario
-                        </td>
+                        <td>@(item.GuidUsuarioNavigation?.nombreUser ?? "Sin Usuario")</td>
                         <td class="text-end">
                             <a asp-action="Edit" asp-route-id="@item.GuidNoticia" class="btn btn-sm btn-primary">Editar</a>
                             <a asp-action="Delete" asp-route-id="@item.GuidNoticia" class="btn btn-sm btn-danger ms-1">Eliminar</a>
