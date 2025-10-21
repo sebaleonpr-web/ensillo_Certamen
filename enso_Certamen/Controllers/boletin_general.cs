@@ -18,6 +18,11 @@ namespace enso_Certamen.Controllers
         }
 
 
+        private void ValidarFecha(DateTime fecha, string keyField = "fechaNoticia")
+        {
+            if (fecha.Year < 1900 || fecha.Year > 2100)
+                ModelState.AddModelError(keyField, "La fecha debe estar entre 1900 y 2100.");
+        }
         //GET: /boletin_general
         //Tabla de boletines, Index.cshtml        //Carga la lista de boletines ordenados por fecha descendente
         public async Task<IActionResult> Index()
@@ -57,6 +62,8 @@ namespace enso_Certamen.Controllers
         //Campos definidos en el modelo BoletinGeneral.cs
         public async Task<IActionResult> Create([Bind("TituloBoletin,DescripcionBoletin,FechaBoletin,GuidNoticia")] boletinGeneral model)
         {
+
+            ValidarFecha(model.FechaBoletin.ToDateTime(new TimeOnly()), "FechaBoletin");
             //Validador si falla un dato
             if (!ModelState.IsValid)
             {
@@ -111,6 +118,7 @@ namespace enso_Certamen.Controllers
         //ID RETORNADO DEL URL, asp-route-id=@item.GuidBoletin
         public async Task<IActionResult> Edit(Guid id, [Bind("GuidBoletin,TituloBoletin,DescripcionBoletin,FechaBoletin,GuidNoticia")] boletinGeneral model)
         {
+            ValidarFecha(model.FechaBoletin.ToDateTime(new TimeOnly()), "FechaBoletin");
 
             if (id != model.GuidBoletin) return NotFound();
             //Validador si falla un dato

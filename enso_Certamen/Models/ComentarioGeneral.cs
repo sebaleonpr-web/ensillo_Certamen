@@ -24,9 +24,10 @@ public partial class comentarioGeneral
     public string emailLectorComentario { get; set; } = null!;
 
     [Required(ErrorMessage = "El contenido es obligatorio.")]
-    [Column(TypeName = "text")] 
+    [Column(TypeName = "text")]
     public string contenidoComentario { get; set; } = null!;
 
+    
     [Column(TypeName = "datetime")]
     public DateTime fechaComentario { get; set; }
 

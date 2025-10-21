@@ -17,6 +17,12 @@ namespace enso_Certamen.Controllers
             _db = db;
         }
 
+        private void ValidarFecha(DateTime fecha, string keyField = "fechaNoticia")
+        {
+            if (fecha.Year < 1900 || fecha.Year > 2100)
+                ModelState.AddModelError(keyField, "La fecha debe estar entre 1900 y 2100.");
+        }
+        
         // GET: /comentario_general
         public async Task<IActionResult> Index()
         {
@@ -51,6 +57,8 @@ namespace enso_Certamen.Controllers
             // 👇 Normaliza el combo: Guid.Empty => null
             if (!model.GuidNoticia.HasValue || model.GuidNoticia.Value == Guid.Empty)
                 model.GuidNoticia = null;
+
+            ValidarFecha(model.fechaComentario);
 
             if (!ModelState.IsValid)
             {
@@ -96,6 +104,7 @@ namespace enso_Certamen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [Bind("GuidComentario,nombrelectorComentario,emailLectorComentario,contenidoComentario,fechaComentario,GuidNoticia")] comentarioGeneral model)
         {
+
             if (id != model.GuidComentario) return NotFound();
 
             // 👇 Igual que en Create

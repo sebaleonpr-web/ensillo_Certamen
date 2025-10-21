@@ -17,6 +17,7 @@
                 <tr>
                     <th>Título</th>
                     <th>Resumen</th>
+                    <th>Contenido</th>
                     <th>Fecha</th>
                     <th>Usuario</th>
                     <th class="text-end"></th>
@@ -38,6 +39,7 @@
                     <tr>
                         <td>@item.tituloNoticia</td>
                         <td>@item.resumenNoticia</td>
+                        <td>@item.contenidoNoticia</td>
                         <td>@item.fechaNoticia.ToString("yyyy-MM-dd")</td>
                         <td>@(item.GuidUsuarioNavigation?.nombreUser ?? "Sin Usuario")</td>
                         <td class="text-end">
