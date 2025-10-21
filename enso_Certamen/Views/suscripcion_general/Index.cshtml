@@ -39,7 +39,7 @@
                         <td>@item.nombreSuscripcion</td>
                         <td>@item.emailSuscripcion</td>
                         <td>@item.fechaSuscripcion.ToString("yyyy-MM-dd")</td>
-                        <td>@item.GuidBoletin</td>
+                        <td>@(item.GuidBoletinNavigation?.TituloBoletin??"Sin Noticia")</td>
                         <td class="text-end">
                             <a asp-action="Edit" asp-route-id="@item.GuidSuscripcion" class="btn btn-sm btn-primary">Editar</a>
                             <a asp-action="Delete" asp-route-id="@item.GuidSuscripcion" class="btn btn-sm btn-danger ms-1">Eliminar</a>

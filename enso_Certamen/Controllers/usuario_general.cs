@@ -24,6 +24,7 @@ namespace enso_Certamen.Controllers
         {
             var lista = await _db.usuariosGenerals
                                 .AsNoTracking()
+                                .Include(u => u.GuidRolNavigation) // si quieres mostrar el nombre del rol
                                 .OrderBy(u => u.GuidUsuario)
                                 .ToListAsync();
 
@@ -36,10 +37,11 @@ namespace enso_Certamen.Controllers
         {
             var lista = await _db.rolGenerals
                                 .AsNoTracking()
+                                .OrderBy(r => r.nombreRol)
                                 .Select(r => new SelectListItem
                                 {
                                     Value    = r.GuidRol.ToString(),
-                                    Text     = string.IsNullOrWhiteSpace(r.nombreRol) ? "(Sin nombre)" : r.nombreRol,
+                                    Text     = r.nombreRol,
                                     Selected = (seleccionado.HasValue && r.GuidRol == seleccionado.Value)
                                 })
                                 .ToListAsync();

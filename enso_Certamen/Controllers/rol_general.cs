@@ -20,8 +20,9 @@ namespace enso_Certamen.Controllers
         public async Task<IActionResult> Index()
         {
             var roles = await _db.rolGenerals
-                                .OrderBy(r => r.nombreRol)
-                                .ToListAsync();
+            .AsNoTracking()                                     
+            .OrderBy(r => r.nombreRol)
+            .ToListAsync();
 
             return View("~/Views/rol_general/Index.cshtml", roles);
         }

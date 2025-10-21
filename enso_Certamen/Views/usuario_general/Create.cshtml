@@ -39,7 +39,7 @@
             <select asp-for="GuidRol"
                     class="form-select"
                     asp-items="@(ViewBag.Roles as IEnumerable<SelectListItem> ?? new List<SelectListItem>())">
-                <option value="">Sin rol</option>
+                <option value=""selected disabled hidden>Seleccione Rol</option>
                 <option value="@Guid.Empty">Sin rol</option>
             </select>
             <span asp-validation-for="GuidRol" class="text-danger"></span>
