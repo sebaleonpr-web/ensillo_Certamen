@@ -37,7 +37,7 @@
             <div class="mb-3">
                 <label asp-for="GuidNoticia" class="form-label">Noticia</label>
                 <select asp-for="GuidNoticia" class="form-select" asp-items="ViewBag.Noticias">
-                    <option value="@Guid.Empty">-- Selecciona una noticia --</option>
+                    <option value="@Guid.Empty">Selecciona una noticia</option>
                 </select>
                 <span asp-validation-for="GuidNoticia" class="text-danger"></span>
             </div>
