@@ -154,7 +154,6 @@ namespace enso_Certamen.Controllers
             }
         }
 
-        // ---------- Delete ----------
         // GET: /noticia_general/Delete/{id}
         public async Task<IActionResult> Delete(Guid? id)
         {
@@ -185,7 +184,6 @@ public async Task<IActionResult> DeleteConfirmed(Guid id)
 
     try
     {
-        // 1) Borrar comentarios asociados
         if (noticia.comentarioGenerals != null && noticia.comentarioGenerals.Count > 0)
         {
             _db.comentarioGenerals.RemoveRange(noticia.comentarioGenerals);
@@ -197,7 +195,7 @@ public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             foreach (var boletin in noticia.boletinGenerals)
             {
-                boletin.GuidNoticia = null; // solo si tu FK es nullable
+                boletin.GuidNoticia = null; 
             }
             await _db.SaveChangesAsync();
         }

@@ -187,7 +187,7 @@ namespace enso_Certamen.Controllers
             if (id == null) return NotFound();
             //Buscar el boletin por id en la database
             var entidad = await _db.boletinGenerals
-                .Include(b => b.GuidNoticiaNavigation) // 👈 carga la relación
+                .Include(b => b.GuidNoticiaNavigation) 
                 .FirstOrDefaultAsync(b => b.GuidBoletin == id);
 
             //Si no lo encuentra retorna no encontrado
