@@ -64,8 +64,8 @@ namespace enso_Certamen.Controllers
                 ViewBag.Noticias = new SelectList(
                     _db.noticiaGenerals
                     .OrderBy(n => n.GuidNoticia)
-                    .Select(n => new { n.GuidNoticia, Texto = n.tituloNoticia.ToString() }),
-                    "GuidNoticia", "Texto", model.GuidNoticia
+                    .Select(n => new { n.GuidNoticia, Texto = n.tituloNoticia }),
+                    "GuidNoticia", "tituloNoticia", model.GuidNoticia
                 );
                 return View("~/Views/boletin_general/Create.cshtml", model);
             }
@@ -93,7 +93,7 @@ namespace enso_Certamen.Controllers
             ViewBag.Noticias = new SelectList(
                 _db.noticiaGenerals
                 .OrderBy(n => n.GuidNoticia)
-                .Select(n => new { n.GuidNoticia, Texto = n.GuidNoticia.ToString() }),
+                .Select(n => new { n.GuidNoticia, Texto = n.tituloNoticia.ToString() }),
                 "GuidNoticia", "Texto", entidad.GuidNoticia
             );
             //Retornar la vista Edit.cshtml con la entidad encontrada
@@ -121,7 +121,7 @@ namespace enso_Certamen.Controllers
                     _db.noticiaGenerals
                     .OrderBy(n => n.GuidNoticia)
                     .Select(n => new { n.GuidNoticia, Texto = n.tituloNoticia.ToString() }),
-                    "GuidNoticia", "Texto", model.GuidNoticia
+                    "GuidNoticia", "tituloNoticia", model.GuidNoticia
                 );
                 //Retornar la vista Edit.cshtml con el modelo
                 //Datos incorrectos
@@ -165,7 +165,10 @@ namespace enso_Certamen.Controllers
             //Si el id es nulo retorna no encontrado
             if (id == null) return NotFound();
             //Buscar el boletin por id en la database
-            var entidad = await _db.boletinGenerals.FindAsync(id);
+            var entidad = await _db.boletinGenerals
+                .Include(b => b.GuidNoticiaNavigation) // 👈 carga la relación
+                .FirstOrDefaultAsync(b => b.GuidBoletin == id);
+
             //Si no lo encuentra retorna no encontrado
             if (entidad == null) return NotFound();
             //Retorna la vista Delete.cshtml con la entidad encontrada
@@ -179,7 +182,10 @@ namespace enso_Certamen.Controllers
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             //Buscar el boletin por id en la database
-            var entidad = await _db.boletinGenerals.FindAsync(id);
+        var entidad = await _db.boletinGenerals
+            .Include(b => b.GuidNoticiaNavigation) // 👈 carga la relación
+            .FirstOrDefaultAsync(b => b.GuidBoletin == id);
+
             //Si lo encuentra, eliminar
             if (entidad != null)
             {

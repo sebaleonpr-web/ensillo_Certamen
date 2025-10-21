@@ -23,10 +23,11 @@ namespace enso_Certamen.Controllers
         {
             var items = await _db.usuariosGenerals
                                 .AsNoTracking()
+                                .OrderBy(u => u.GuidUsuario)
                                 .Select(u => new SelectListItem
                                 {
                                     Value    = u.GuidUsuario.ToString(),
-                                     Text     = u.GuidUsuario.ToString(), // cámbialo si tienes nombre/email
+                                    Text = u.nombreUser,
                                     Selected = seleccionado.HasValue && u.GuidUsuario == seleccionado.Value
                                 })
                                 .ToListAsync();
@@ -154,8 +155,9 @@ namespace enso_Certamen.Controllers
             if (id == null) return NotFound();
 
             var noticia = await _db.noticiaGenerals
-                                   .AsNoTracking()
-                                   .FirstOrDefaultAsync(n => n.GuidNoticia == id.Value);
+                                .Include(n => n.GuidUsuarioNavigation)
+                                .AsNoTracking()
+                                .FirstOrDefaultAsync(n => n.GuidNoticia == id.Value);
             if (noticia == null) return NotFound();
 
             return View("~/Views/noticia_general/Delete.cshtml", noticia);
@@ -167,6 +169,7 @@ namespace enso_Certamen.Controllers
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var noticia = await _db.noticiaGenerals.FindAsync(id);
+                
             if (noticia == null) return NotFound();
 
             try
