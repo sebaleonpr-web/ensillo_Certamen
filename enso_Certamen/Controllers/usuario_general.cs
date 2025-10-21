@@ -18,7 +18,7 @@ namespace enso_Certamen.Controllers
             _db = db;
         }
 
-        // -------------------------- LISTA --------------------------
+
         // GET: /usuario_general
         public async Task<IActionResult> Index()
         {
@@ -31,8 +31,7 @@ namespace enso_Certamen.Controllers
             return View("~/Views/usuario_general/Index.cshtml", lista);
         }
 
-        // ----------------------- HELPER ROLES ----------------------
-        // Carga ViewBag.Roles como IEnumerable<SelectListItem> (nunca null)
+
         private async Task CargarRolesAsync(Guid? seleccionado = null)
         {
             var lista = await _db.rolGenerals
@@ -49,7 +48,7 @@ namespace enso_Certamen.Controllers
             ViewBag.Roles = lista ?? new List<SelectListItem>();
         }
 
-        // -------------------------- CREATE -------------------------
+
         // GET: /usuario_general/Create
         public async Task<IActionResult> Create()
         {
@@ -82,7 +81,6 @@ namespace enso_Certamen.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // --------------------------- EDIT --------------------------
         // GET: /usuario_general/Edit/{id}
         public async Task<IActionResult> Edit(Guid? id)
         {
@@ -116,7 +114,6 @@ namespace enso_Certamen.Controllers
                 return View("~/Views/usuario_general/Edit.cshtml", model);
             }
 
-            // Copiar campos editables (sin tocar contraseña si viene vacía)
             entidad.nombreUser   = model.nombreUser;
             entidad.apellidoUser = model.apellidoUser;
             entidad.emailUser    = model.emailUser;
@@ -131,7 +128,6 @@ namespace enso_Certamen.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // -------------------------- DELETE -------------------------
         // GET: /usuario_general/Delete/{id}
         public async Task<IActionResult> Delete(Guid? id)
         {
@@ -151,7 +147,6 @@ namespace enso_Certamen.Controllers
             var entidad = await _db.usuariosGenerals.FindAsync(id);
             if (entidad != null)
             {
-                // === NUEVO: desasociar noticias que referencian al usuario (evita conflicto FK) ===
                 var noticias = await _db.noticiaGenerals
                                         .Where(n => n.GuidUsuario == id)
                                         .ToListAsync();
