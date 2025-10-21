@@ -70,17 +70,23 @@ namespace enso_Certamen.Controllers
         public async Task<IActionResult> Create([Bind("TituloBoletin,DescripcionBoletin,FechaBoletin,GuidNoticia")] boletinGeneral model)
         {
 
-            ValidarFecha(model.FechaBoletin.ToDateTime(new TimeOnly()), "FechaBoletin");
+            if (model.FechaBoletin == default)
+            model.FechaBoletin = DateTime.Today;
+
+            ValidarFecha(model.FechaBoletin, nameof(model.FechaBoletin));
+
+
             //Validador si falla un dato
             if (!ModelState.IsValid)
             {
                 //Recargar el combo de noticias si hay error
                 ViewBag.Noticias = new SelectList(
-                    _db.noticiaGenerals
-                    .OrderBy(n => n.GuidNoticia)
+                _db.noticiaGenerals
+                    .AsNoTracking()
+                    .OrderBy(n => n.tituloNoticia)
                     .Select(n => new { n.GuidNoticia, Texto = n.tituloNoticia }),
-                    "GuidNoticia", "tituloNoticia", model.GuidNoticia
-                );
+                "GuidNoticia", "Texto", model.GuidNoticia
+);
                 return View("~/Views/boletin_general/Create.cshtml", model);
             }
             //Agregar un nuevo boletin
@@ -125,7 +131,7 @@ namespace enso_Certamen.Controllers
         //ID RETORNADO DEL URL, asp-route-id=@item.GuidBoletin
         public async Task<IActionResult> Edit(Guid id, [Bind("GuidBoletin,TituloBoletin,DescripcionBoletin,FechaBoletin,GuidNoticia")] boletinGeneral model)
         {
-            ValidarFecha(model.FechaBoletin.ToDateTime(new TimeOnly()), "FechaBoletin");
+            ValidarFecha(model.FechaBoletin, nameof(model.FechaBoletin));
 
             if (id != model.GuidBoletin) return NotFound();
             //Validador si falla un dato

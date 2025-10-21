@@ -21,6 +21,7 @@ public partial class suscripcionGeneral
 
     public string emailSuscripcion { get; set; } = null!;
 
+    [Required(ErrorMessage = "La fecha es obligatoria.")]
     [Column(TypeName = "datetime")]
     public DateTime fechaSuscripcion { get; set; }
 

@@ -22,8 +22,10 @@ public partial class boletinGeneral
     [Required(ErrorMessage = "La Descripcion es obligatorio.")]
     public string? DescripcionBoletin { get; set; }
 
+
     [Required(ErrorMessage = "La fecha es obligatoria.")]
-    public DateOnly FechaBoletin { get; set; }
+    [Column(TypeName = "datetime")]
+    public DateTime FechaBoletin { get; set; }
 
     public Guid? GuidNoticia { get; set; }
 

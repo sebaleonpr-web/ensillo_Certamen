@@ -29,11 +29,8 @@ public partial class noticiaGeneral
 
     public string? contenidoNoticia { get; set; }
 
-    [Display(Name = "Ingrese fecha")]
-    [DataType(DataType.Date)]
-    [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+    [Required(ErrorMessage = "La fecha es obligatoria.")]
     [Column(TypeName = "datetime")]
-        [Required(ErrorMessage = "La Fecha es obligatoria.")]
     public DateTime fechaNoticia { get; set; }
 
     public Guid? GuidUsuario { get; set; }
