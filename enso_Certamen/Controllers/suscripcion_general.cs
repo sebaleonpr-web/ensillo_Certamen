@@ -17,6 +17,18 @@ namespace enso_Certamen.Controllers
             _db = db;
         }
 
+        private void ValidarFecha(DateTime? fecha, string keyField = "fechaComentario")
+        {
+            if (!fecha.HasValue)
+            {
+                ModelState.AddModelError(keyField, "La fecha es obligatoria.");
+                return;
+            }
+
+            var f = fecha.Value.Date;
+            if (f.Year < 1900 || f.Year > 2100)
+                ModelState.AddModelError(keyField, "La fecha debe estar entre 1900 y 2100.");
+        }
         // GET: /suscripcion_general
         // Tabla de suscripciones, Index.cshtml — Carga la lista ordenada por fecha desc
         public async Task<IActionResult> Index()
@@ -50,6 +62,8 @@ namespace enso_Certamen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("nombreSuscripcion,emailSuscripcion,fechaSuscripcion,GuidBoletin")] suscripcionGeneral model)
         {
+            ValidarFecha(model.fechaSuscripcion, nameof(model.fechaSuscripcion));
+
             if (!ModelState.IsValid)
             {
                 ViewBag.Boletines = new SelectList(
@@ -97,6 +111,8 @@ namespace enso_Certamen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [Bind("GuidSuscripcion,nombreSuscripcion,emailSuscripcion,fechaSuscripcion,GuidBoletin")] suscripcionGeneral model)
         {
+            ValidarFecha(model.fechaSuscripcion, nameof(model.fechaSuscripcion));
+
             if (id != model.GuidSuscripcion) return NotFound();
 
             if (!ModelState.IsValid)

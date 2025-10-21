@@ -17,11 +17,20 @@ namespace enso_Certamen.Controllers
             _db = db;
         }
 
-        private void ValidarFecha(DateTime fecha, string keyField = "fechaNoticia")
+       // Helper
+        private void ValidarFecha(DateTime? fecha, string keyField = "fechaComentario")
         {
-            if (fecha.Year < 1900 || fecha.Year > 2100)
+            if (!fecha.HasValue)
+            {
+                ModelState.AddModelError(keyField, "La fecha es obligatoria.");
+                return;
+            }
+
+            var f = fecha.Value.Date;
+            if (f.Year < 1900 || f.Year > 2100)
                 ModelState.AddModelError(keyField, "La fecha debe estar entre 1900 y 2100.");
         }
+
         
         // GET: /comentario_general
         public async Task<IActionResult> Index()
@@ -58,8 +67,7 @@ namespace enso_Certamen.Controllers
             if (!model.GuidNoticia.HasValue || model.GuidNoticia.Value == Guid.Empty)
                 model.GuidNoticia = null;
 
-            ValidarFecha(model.fechaComentario);
-
+            ValidarFecha(model.fechaComentario, nameof(model.fechaComentario));
             if (!ModelState.IsValid)
             {
                 ViewBag.Noticias = new SelectList(
@@ -104,13 +112,13 @@ namespace enso_Certamen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [Bind("GuidComentario,nombrelectorComentario,emailLectorComentario,contenidoComentario,fechaComentario,GuidNoticia")] comentarioGeneral model)
         {
+            ValidarFecha(model.fechaComentario, nameof(model.fechaComentario));
 
             if (id != model.GuidComentario) return NotFound();
-
+            ValidarFecha(model.fechaComentario);
             // 👇 Igual que en Create
             if (!model.GuidNoticia.HasValue || model.GuidNoticia.Value == Guid.Empty)
                 model.GuidNoticia = null;
-
             if (!ModelState.IsValid)
             {
                 ViewBag.Noticias = new SelectList(

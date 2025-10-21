@@ -18,9 +18,16 @@ namespace enso_Certamen.Controllers
         }
 
 
-        private void ValidarFecha(DateTime fecha, string keyField = "fechaNoticia")
+        private void ValidarFecha(DateTime? fecha, string keyField = "fechaComentario")
         {
-            if (fecha.Year < 1900 || fecha.Year > 2100)
+            if (!fecha.HasValue)
+            {
+                ModelState.AddModelError(keyField, "La fecha es obligatoria.");
+                return;
+            }
+
+            var f = fecha.Value.Date;
+            if (f.Year < 1900 || f.Year > 2100)
                 ModelState.AddModelError(keyField, "La fecha debe estar entre 1900 y 2100.");
         }
         //GET: /boletin_general

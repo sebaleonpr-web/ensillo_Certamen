@@ -18,6 +18,18 @@ namespace enso_Certamen.Controllers
             _db = db;
         }
 
+        private void ValidarFecha(DateTime? fecha, string keyField = "fechaComentario")
+        {
+            if (!fecha.HasValue)
+            {
+                ModelState.AddModelError(keyField, "La fecha es obligatoria.");
+                return;
+            }
+
+            var f = fecha.Value.Date;
+            if (f.Year < 1900 || f.Year > 2100)
+                ModelState.AddModelError(keyField, "La fecha debe estar entre 1900 y 2100.");
+        }
         // ---------- Helpers ----------
         private async Task CargarUsuariosAsync(Guid? seleccionado = null)
         {
@@ -26,19 +38,13 @@ namespace enso_Certamen.Controllers
                                 .OrderBy(u => u.GuidUsuario)
                                 .Select(u => new SelectListItem
                                 {
-                                    Value    = u.GuidUsuario.ToString(),
+                                    Value = u.GuidUsuario.ToString(),
                                     Text = u.nombreUser,
                                     Selected = seleccionado.HasValue && u.GuidUsuario == seleccionado.Value
                                 })
                                 .ToListAsync();
 
             ViewBag.Usuarios = items ?? new List<SelectListItem>(); // nunca null
-        }
-
-        private void ValidarFecha(DateTime fecha, string keyField = "fechaNoticia")
-        {
-            if (fecha.Year < 1900 || fecha.Year > 2100)
-                ModelState.AddModelError(keyField, "La fecha debe estar entre 1900 y 2100.");
         }
 
         // ---------- Index ----------
@@ -72,7 +78,7 @@ namespace enso_Certamen.Controllers
             if (model.GuidNoticia == Guid.Empty) model.GuidNoticia = Guid.NewGuid();
             if (model.fechaNoticia == default)   model.fechaNoticia = DateTime.Today;
 
-            ValidarFecha(model.fechaNoticia);
+            ValidarFecha(model.fechaNoticia, nameof(model.fechaNoticia));
 
             if (!ModelState.IsValid)
             {
@@ -117,7 +123,7 @@ namespace enso_Certamen.Controllers
             if (model.GuidUsuario == Guid.Empty) model.GuidUsuario = null; // opcional
             if (model.fechaNoticia == default)   model.fechaNoticia = DateTime.Today;
 
-            ValidarFecha(model.fechaNoticia);
+            ValidarFecha(model.fechaNoticia, nameof(model.fechaNoticia));
 
             if (!ModelState.IsValid)
             {

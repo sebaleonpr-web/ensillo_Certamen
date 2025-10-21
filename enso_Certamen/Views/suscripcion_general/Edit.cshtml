@@ -25,14 +25,15 @@
 
             <div class="mb-3">
                 <label asp-for="fechaSuscripcion" class="form-label">Fecha</label>
-                <input asp-for="fechaSuscripcion" type="datetime-local" class="form-control" />
+                <input asp-for="fechaSuscripcion" type="date" class="form-control" />
                 <span asp-validation-for="fechaSuscripcion" class="text-danger"></span>
             </div>
 
             <div class="mb-4">
                 <label asp-for="GuidBoletin" class="form-label">Boletín</label>
                 <select asp-for="GuidBoletin" asp-items="ViewBag.Boletines" class="form-control">
-                    <option value="" selected disabled hidden>-- Selecciona un boletín --</option>
+                    <option value="" selected disabled hidden>Selecciona un boletín</option>
+                    <option value="@Guid.Empty">Sin boletín</option>"
                 </select>
                 <span asp-validation-for="GuidBoletin" class="text-danger"></span>
             </div>
