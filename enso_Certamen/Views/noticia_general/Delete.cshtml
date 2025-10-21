@@ -25,7 +25,7 @@
             <dd class="col-sm-9">@(Model.GuidUsuarioNavigation?.nombreUser ?? "Sin Usuario")</dd>
         </dl>
 
-        <form asp-action="Delete" method="post">
+        <form asp-action="Delete" asp-route-id="@Model.GuidNoticia" method="post">
             @Html.AntiForgeryToken()
             <input type="hidden" asp-for="GuidNoticia" />
             <div class="d-flex gap-2">
@@ -33,5 +33,6 @@
                 <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
             </div>
         </form>
+
     </div>
 </div>

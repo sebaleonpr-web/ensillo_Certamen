@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using enso_Certamen.Models; // 👈 verifica que este namespace coincida con el que salga en tu carpeta Models
+using enso_Certamen.Models;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,11 +9,11 @@ var builder = WebApplication.CreateBuilder(args);
 var cs = builder.Configuration.GetConnectionString("DefaultConnection");
 
 // Registra tu contexto con SQL Server (usa tu base 'boletinLayon')
-builder.Services.AddDbContext<boletinLayonContext>(opt => 
+builder.Services.AddDbContext<boletinLayonContext>(opt =>
     opt.UseSqlServer(cs)
 );
 
-// Agrega MVC (ojo con la A mayúscula)
+// Agrega MVC
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -29,11 +31,27 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
 
+
+// ---------- 🌎 Configurar idioma global español (Chile) ----------
+var cultureInfo = new CultureInfo("es-CL");
+CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
+
+var localizationOptions = new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture(cultureInfo),
+    SupportedCultures = new List<CultureInfo> { cultureInfo },
+    SupportedUICultures = new List<CultureInfo> { cultureInfo }
+};
+
+app.UseRequestLocalization(localizationOptions);
+// ---------------------------------------------------------------
+
+
 // Ruta por defecto (HomeController -> Index)
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}"
 );
-
 
 app.Run();

@@ -14,18 +14,26 @@ public partial class usuariosGeneral
 
     [StringLength(100)]
     [Unicode(false)]
+        [Required(ErrorMessage = "La Contraseña es obligatorio.")]
+
     public string contraUser { get; set; } = null!;
 
     [StringLength(50)]
     [Unicode(false)]
+        [Required(ErrorMessage = "El Nombre es obligatorio.")]
+
     public string nombreUser { get; set; } = null!;
 
     [StringLength(50)]
     [Unicode(false)]
+        [Required(ErrorMessage = "El Apellido es obligatorio.")]
+
     public string apellidoUser { get; set; } = null!;
 
     [StringLength(100)]
     [Unicode(false)]
+        [Required(ErrorMessage = "El Correo es obligatorio.")]
+
     [EmailAddress(ErrorMessage = "El formato del correo no es válido.")]
     public string emailUser { get; set; } = null!;
 

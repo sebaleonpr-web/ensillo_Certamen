@@ -14,16 +14,26 @@ public partial class noticiaGeneral
 
     [StringLength(200)]
     [Unicode(false)]
+    [Required(ErrorMessage = "El Titulo es obligatorio.")]
+
     public string tituloNoticia { get; set; } = null!;
 
     [StringLength(500)]
     [Unicode(false)]
+        [Required(ErrorMessage = "El Resumen es obligatorio.")]
+
     public string? resumenNoticia { get; set; }
 
     [Column(TypeName = "text")]
+        [Required(ErrorMessage = "El Contenido es obligatorio.")]
+
     public string? contenidoNoticia { get; set; }
 
+    [Display(Name = "Ingrese fecha")]
+    [DataType(DataType.Date)]
+    [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
     [Column(TypeName = "datetime")]
+        [Required(ErrorMessage = "La Fecha es obligatoria.")]
     public DateTime fechaNoticia { get; set; }
 
     public Guid? GuidUsuario { get; set; }

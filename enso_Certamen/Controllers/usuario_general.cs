@@ -62,11 +62,14 @@ namespace enso_Certamen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(usuariosGeneral model)
         {
-            // Si el <select> vino vacío, algunos binders ponen Guid.Empty
             if (model.GuidRol == Guid.Empty) model.GuidRol = null;
-
-            // Por si tu tabla no tiene DEFAULT NEWID()
             if (model.GuidUsuario == Guid.Empty) model.GuidUsuario = Guid.NewGuid();
+
+            // === NUEVO: exigir contraseña en Create ===
+            if (string.IsNullOrWhiteSpace(model.contraUser))
+            {
+                ModelState.AddModelError(nameof(model.contraUser), "La contraseña es obligatoria.");
+            }
 
             if (!ModelState.IsValid)
             {
@@ -88,9 +91,7 @@ namespace enso_Certamen.Controllers
             var entidad = await _db.usuariosGenerals.FindAsync(id);
             if (entidad == null) return NotFound();
 
-            // Si en la vista Edit hay combo de roles, hay que cargarlo
             await CargarRolesAsync(entidad.GuidRol);
-
             return View("~/Views/usuario_general/Edit.cshtml", entidad);
         }
 
@@ -101,26 +102,32 @@ namespace enso_Certamen.Controllers
         {
             if (id != model.GuidUsuario) return NotFound();
 
-            if (model.GuidRol == Guid.Empty) model.GuidRol = null;
+            // Cargar la entidad existente
+            var entidad = await _db.usuariosGenerals
+                                .FirstOrDefaultAsync(u => u.GuidUsuario == id);
+            if (entidad == null) return NotFound();
+
+            // Normaliza GuidRol
+            var guidRol = (model.GuidRol == Guid.Empty) ? (Guid?)null : model.GuidRol;
 
             if (!ModelState.IsValid)
             {
-                await CargarRolesAsync(model.GuidRol);
+                await CargarRolesAsync(guidRol);
                 return View("~/Views/usuario_general/Edit.cshtml", model);
             }
 
-            try
+            // Copiar campos editables (sin tocar contraseña si viene vacía)
+            entidad.nombreUser   = model.nombreUser;
+            entidad.apellidoUser = model.apellidoUser;
+            entidad.emailUser    = model.emailUser;
+            entidad.GuidRol      = guidRol;
+
+            if (!string.IsNullOrWhiteSpace(model.contraUser))
             {
-                _db.Update(model);
-                await _db.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                var existe = await _db.usuariosGenerals.AnyAsync(e => e.GuidUsuario == id);
-                if (!existe) return NotFound();
-                throw;
+                entidad.contraUser = model.contraUser;
             }
 
+            await _db.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
@@ -144,6 +151,18 @@ namespace enso_Certamen.Controllers
             var entidad = await _db.usuariosGenerals.FindAsync(id);
             if (entidad != null)
             {
+                // === NUEVO: desasociar noticias que referencian al usuario (evita conflicto FK) ===
+                var noticias = await _db.noticiaGenerals
+                                        .Where(n => n.GuidUsuario == id)
+                                        .ToListAsync();
+                if (noticias.Count > 0)
+                {
+                    foreach (var n in noticias)
+                        n.GuidUsuario = null;
+
+                    await _db.SaveChangesAsync(); // guardar primero la desasociación
+                }
+
                 _db.usuariosGenerals.Remove(entidad);
                 await _db.SaveChangesAsync();
             }

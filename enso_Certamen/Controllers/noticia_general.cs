@@ -170,26 +170,53 @@ namespace enso_Certamen.Controllers
         }
 
         // POST: /noticia_general/Delete/{id}
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
-        {
-            var noticia = await _db.noticiaGenerals.FindAsync(id);
-                
-            if (noticia == null) return NotFound();
+[HttpPost, ActionName("Delete")]
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> DeleteConfirmed(Guid id)
+{
+    var noticia = await _db.noticiaGenerals
+                        .Include(n => n.boletinGenerals)
+                        .Include(n => n.comentarioGenerals)
+                        .FirstOrDefaultAsync(n => n.GuidNoticia == id);
 
-            try
-            {
-                _db.noticiaGenerals.Remove(noticia);
-                await _db.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            catch (DbUpdateException)
-            {
-                // FK (comentarios, boletines) pueden bloquear el borrado
-                ModelState.AddModelError(string.Empty, "No se pudo eliminar la noticia (posibles referencias).");
-                return View("~/Views/noticia_general/Delete.cshtml", noticia);
-            }
+    if (noticia == null) return NotFound();
+
+    using var tx = await _db.Database.BeginTransactionAsync();
+
+    try
+    {
+        // 1) Borrar comentarios asociados
+        if (noticia.comentarioGenerals != null && noticia.comentarioGenerals.Count > 0)
+        {
+            _db.comentarioGenerals.RemoveRange(noticia.comentarioGenerals);
+            await _db.SaveChangesAsync();
         }
+
+        // 2) Desasociar o eliminar boletines asociados (evita error FK)
+        if (noticia.boletinGenerals != null && noticia.boletinGenerals.Count > 0)
+        {
+            foreach (var boletin in noticia.boletinGenerals)
+            {
+                boletin.GuidNoticia = null; // solo si tu FK es nullable
+            }
+            await _db.SaveChangesAsync();
+        }
+
+        // 3) Eliminar la noticia
+        _db.noticiaGenerals.Remove(noticia);
+        await _db.SaveChangesAsync();
+
+        await tx.CommitAsync();
+        return RedirectToAction(nameof(Index));
+    }
+    catch (Exception)
+    {
+        await tx.RollbackAsync();
+        ModelState.AddModelError(string.Empty, "No se pudo eliminar la noticia (tiene referencias activas).");
+        return View("~/Views/noticia_general/Delete.cshtml", noticia);
+    }
+}
+
+
     }
 }

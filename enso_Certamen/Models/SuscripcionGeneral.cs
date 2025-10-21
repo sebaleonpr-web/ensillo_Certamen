@@ -12,9 +12,13 @@ public partial class suscripcionGeneral
     [Key]
     public Guid GuidSuscripcion { get; set; }
 
+    [Required(ErrorMessage = "El Nombre es obligatorio.")]
+
     public string nombreSuscripcion { get; set; } = null!;
 
     [EmailAddress(ErrorMessage = "El formato del correo no es válido.")]
+        [Required(ErrorMessage = "El Correo es obligatorio.")]
+
     public string emailSuscripcion { get; set; } = null!;
 
     [Column(TypeName = "datetime")]

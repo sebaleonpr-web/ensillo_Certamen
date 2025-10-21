@@ -14,10 +14,14 @@ namespace enso_Certamen.Models
 
         [StringLength(50)]
         [Unicode(false)]
+            [Required(ErrorMessage = "El Nombre es obligatorio.")]
+
         public string nombreRol { get; set; } = string.Empty;
 
         [StringLength(200)]
         [Unicode(false)]
+            [Required(ErrorMessage = "La Descripción es obligatorio.")]
+
         public string? descripRol { get; set; }
 
         // 👇 Inversa hacia usuariosGeneral

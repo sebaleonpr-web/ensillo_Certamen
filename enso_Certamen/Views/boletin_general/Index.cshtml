@@ -39,7 +39,7 @@
                         <td>@item.TituloBoletin</td>
                         <td>@item.DescripcionBoletin</td>
                         <td>@item.FechaBoletin.ToString("yyyy-MM-dd")</td>
-                        <td>@(item.GuidNoticiaNavigation?.tituloNoticia ?? "Sin noticia")</td>
+                        <td>@(item.GuidNoticiaNavigation!=null ? item.GuidNoticiaNavigation?.tituloNoticia : "Sin noticia")</td>
                         <td class="text-end">
                             <a asp-action="Edit" asp-route-id="@item.GuidBoletin" class="btn btn-sm btn-primary">Editar</a>
                             <a asp-action="Delete" asp-route-id="@item.GuidBoletin" class="btn btn-sm btn-danger ms-1">Eliminar</a>

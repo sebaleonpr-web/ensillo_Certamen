@@ -50,8 +50,6 @@ body {
   font-size: 0.8rem;
   margin-left: 2px;
 }
-.field-validation-error::before {
-  content: "⚠️ ";
-}
+
 
 

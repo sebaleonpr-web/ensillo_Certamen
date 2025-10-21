@@ -27,7 +27,7 @@ public partial class comentarioGeneral
     [Column(TypeName = "text")]
     public string contenidoComentario { get; set; } = null!;
 
-    
+    [Required(ErrorMessage = "La fecha es obligatoria.")]
     [Column(TypeName = "datetime")]
     public DateTime fechaComentario { get; set; }
 
