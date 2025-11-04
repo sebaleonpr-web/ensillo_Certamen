@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using enso_Certamen.Models;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
+using enso_Certamen.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 var cs = builder.Configuration.GetConnectionString("DefaultConnection");
 
 // Registra tu contexto con SQL Server (usa tu base 'boletinLayon')
-builder.Services.AddDbContext<boletinLayonContext>(opt =>
+builder.Services.AddDbContext<BoletinLayonContext>(opt =>
     opt.UseSqlServer(cs)
 );
 
