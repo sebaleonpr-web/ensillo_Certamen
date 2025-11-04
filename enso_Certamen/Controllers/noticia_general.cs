@@ -6,14 +6,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using enso_Certamen.Models;
+using enso_Certamen.Data;
 
 namespace enso_Certamen.Controllers
 {
     public class noticia_generalController : Controller
     {
-        private readonly boletinLayonContext _db;
+        private readonly BoletinLayonContext _db;
 
-        public noticia_generalController(boletinLayonContext db)
+        public noticia_generalController(BoletinLayonContext db)
         {
             _db = db;
         }
@@ -33,13 +34,13 @@ namespace enso_Certamen.Controllers
         // ---------- Helpers ----------
         private async Task CargarUsuariosAsync(Guid? seleccionado = null)
         {
-            var items = await _db.usuariosGenerals
+            var items = await _db.UsuariosGenerals
                                 .AsNoTracking()
                                 .OrderBy(u => u.GuidUsuario)
                                 .Select(u => new SelectListItem
                                 {
                                     Value = u.GuidUsuario.ToString(),
-                                    Text = u.nombreUser,
+                                    Text = u.NombreUser,
                                     Selected = seleccionado.HasValue && u.GuidUsuario == seleccionado.Value
                                 })
                                 .ToListAsync();
@@ -51,10 +52,10 @@ namespace enso_Certamen.Controllers
         // GET: /noticia_general
         public async Task<IActionResult> Index()
         {
-            var lista = await _db.noticiaGenerals
+            var lista = await _db.NoticiaGenerals
                                 .AsNoTracking()
                                 .Include(n => n.GuidUsuarioNavigation)
-                                .OrderByDescending(n => n.fechaNoticia)
+                                .OrderByDescending(n => n.FechaNoticia)
                                 .ToListAsync();
 
             return View("~/Views/noticia_general/Index.cshtml", lista);
@@ -71,14 +72,14 @@ namespace enso_Certamen.Controllers
         // POST: /noticia_general/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("GuidNoticia,tituloNoticia,resumenNoticia,contenidoNoticia,fechaNoticia,GuidUsuario")] noticiaGeneral model)
+        public async Task<IActionResult> Create([Bind("GuidNoticia,tituloNoticia,resumenNoticia,contenidoNoticia,fechaNoticia,GuidUsuario")] NoticiaGeneral model)
         {
             // Normalizaciones
             if (model.GuidUsuario == Guid.Empty) model.GuidUsuario = null; // si es opcional en tu modelo/DB
             if (model.GuidNoticia == Guid.Empty) model.GuidNoticia = Guid.NewGuid();
-            if (model.fechaNoticia == default)   model.fechaNoticia = DateTime.Today;
+            if (model.FechaNoticia == default)   model.FechaNoticia = DateTime.Today;
 
-            ValidarFecha(model.fechaNoticia, nameof(model.fechaNoticia));
+            ValidarFecha(model.FechaNoticia, nameof(model.FechaNoticia));
 
             if (!ModelState.IsValid)
             {
@@ -88,7 +89,7 @@ namespace enso_Certamen.Controllers
 
             try
             {
-                _db.noticiaGenerals.Add(model);
+                _db.NoticiaGenerals.Add(model);
                 await _db.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -106,7 +107,7 @@ namespace enso_Certamen.Controllers
         {
             if (id == null) return NotFound();
 
-            var noticia = await _db.noticiaGenerals.FindAsync(id.Value);
+            var noticia = await _db.NoticiaGenerals.FindAsync(id.Value);
             if (noticia == null) return NotFound();
 
             await CargarUsuariosAsync(noticia.GuidUsuario);
@@ -116,14 +117,14 @@ namespace enso_Certamen.Controllers
         // POST: /noticia_general/Edit/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("GuidNoticia,tituloNoticia,resumenNoticia,contenidoNoticia,fechaNoticia,GuidUsuario")] noticiaGeneral model)
+        public async Task<IActionResult> Edit(Guid id, [Bind("GuidNoticia,tituloNoticia,resumenNoticia,contenidoNoticia,fechaNoticia,GuidUsuario")] NoticiaGeneral model)
         {
             if (id != model.GuidNoticia) return NotFound();
 
             if (model.GuidUsuario == Guid.Empty) model.GuidUsuario = null; // opcional
-            if (model.fechaNoticia == default)   model.fechaNoticia = DateTime.Today;
+            if (model.FechaNoticia == default)   model.FechaNoticia = DateTime.Today;
 
-            ValidarFecha(model.fechaNoticia, nameof(model.fechaNoticia));
+            ValidarFecha(model.FechaNoticia, nameof(model.FechaNoticia));
 
             if (!ModelState.IsValid)
             {
@@ -139,7 +140,7 @@ namespace enso_Certamen.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                var existe = await _db.noticiaGenerals.AnyAsync(n => n.GuidNoticia == id);
+                var existe = await _db.NoticiaGenerals.AnyAsync(n => n.GuidNoticia == id);
                 if (!existe) return NotFound();
 
                 ModelState.AddModelError(string.Empty, "Otro proceso modificó esta noticia. Refresca e intenta de nuevo.");
@@ -159,7 +160,7 @@ namespace enso_Certamen.Controllers
         {
             if (id == null) return NotFound();
 
-            var noticia = await _db.noticiaGenerals
+            var noticia = await _db.NoticiaGenerals
                                 .Include(n => n.GuidUsuarioNavigation)
                                 .AsNoTracking()
                                 .FirstOrDefaultAsync(n => n.GuidNoticia == id.Value);
@@ -173,9 +174,9 @@ namespace enso_Certamen.Controllers
 [ValidateAntiForgeryToken]
 public async Task<IActionResult> DeleteConfirmed(Guid id)
 {
-    var noticia = await _db.noticiaGenerals
-                        .Include(n => n.boletinGenerals)
-                        .Include(n => n.comentarioGenerals)
+    var noticia = await _db.NoticiaGenerals
+                        .Include(n => n.BoletinGenerals)
+                        .Include(n => n.ComentarioGenerals)
                         .FirstOrDefaultAsync(n => n.GuidNoticia == id);
 
     if (noticia == null) return NotFound();
@@ -184,16 +185,16 @@ public async Task<IActionResult> DeleteConfirmed(Guid id)
 
     try
     {
-        if (noticia.comentarioGenerals != null && noticia.comentarioGenerals.Count > 0)
+        if (noticia.ComentarioGenerals != null && noticia.ComentarioGenerals.Count > 0)
         {
-            _db.comentarioGenerals.RemoveRange(noticia.comentarioGenerals);
+            _db.ComentarioGenerals.RemoveRange(noticia.ComentarioGenerals);
             await _db.SaveChangesAsync();
         }
 
         // 2) Desasociar o eliminar boletines asociados (evita error FK)
-        if (noticia.boletinGenerals != null && noticia.boletinGenerals.Count > 0)
+        if (noticia.BoletinGenerals != null && noticia.BoletinGenerals.Count > 0)
         {
-            foreach (var boletin in noticia.boletinGenerals)
+            foreach (var boletin in noticia.BoletinGenerals)
             {
                 boletin.GuidNoticia = null; 
             }
@@ -201,7 +202,7 @@ public async Task<IActionResult> DeleteConfirmed(Guid id)
         }
 
         // 3) Eliminar la noticia
-        _db.noticiaGenerals.Remove(noticia);
+        _db.NoticiaGenerals.Remove(noticia);
         await _db.SaveChangesAsync();
 
         await tx.CommitAsync();

@@ -1,31 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
-namespace enso_Certamen.Models
+namespace enso_Certamen.Models;
+
+public partial class RolGeneral
 {
-    [Table("rolGeneral")]
-    public partial class rolGeneral
-    {
-        [Key]
-        public Guid GuidRol { get; set; }
+    public Guid GuidRol { get; set; }
 
-        [StringLength(50)]
-        [Unicode(false)]
-            [Required(ErrorMessage = "El Nombre es obligatorio.")]
+    public string NombreRol { get; set; } = null!;
 
-        public string nombreRol { get; set; } = string.Empty;
+    public string DescripRol { get; set; } = null!;
 
-        [StringLength(200)]
-        [Unicode(false)]
-            [Required(ErrorMessage = "La Descripción es obligatorio.")]
-
-        public string? descripRol { get; set; }
-
-        // 👇 Inversa hacia usuariosGeneral
-        [InverseProperty("GuidRolNavigation")]
-        public virtual ICollection<usuariosGeneral> usuariosGenerals { get; set; } = new List<usuariosGeneral>();
-    }
+    public virtual ICollection<UsuariosGeneral> UsuariosGenerals { get; set; } = new List<UsuariosGeneral>();
 }

@@ -1,4 +1,4 @@
-@model IEnumerable<enso_Certamen.Models.usuariosGeneral>
+@model IEnumerable<enso_Certamen.Models.UsuariosGeneral>
 @{
     ViewData["Title"] = "Usuarios";
 }
@@ -36,10 +36,10 @@
                 foreach (var item in Model)
                 {
                     <tr>
-                        <td>@item.nombreUser</td>
-                        <td>@item.apellidoUser</td>
-                        <td>@item.emailUser</td>
-                        <td>@(item.GuidRolNavigation?.nombreRol?? "Sin Rol")</td>
+                        <td>@item.NombreUser</td>
+                        <td>@item.ApellidoUser</td>
+                        <td>@item.EmailUser</td>
+                        <td>@(item.GuidRolNavigation?.NombreRol?? "Sin Rol")</td>
                         <td class="text-end">
                             <a asp-action="Edit" asp-route-id="@item.GuidUsuario" class="btn btn-sm btn-primary">Editar</a>
                             <a asp-action="Delete" asp-route-id="@item.GuidUsuario" class="btn btn-sm btn-danger ms-1">Eliminar</a>

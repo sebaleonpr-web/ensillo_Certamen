@@ -1,4 +1,4 @@
-@model enso_Certamen.Models.suscripcionGeneral
+@model enso_Certamen.Models.SuscripcionGeneral
 @{
     ViewData["Title"] = "Editar Suscripción";
 }
@@ -12,21 +12,21 @@
             <input type="hidden" asp-for="GuidSuscripcion" />
 
             <div class="mb-3">
-                <label asp-for="nombreSuscripcion" class="form-label">Nombre</label>
-                <input asp-for="nombreSuscripcion" class="form-control" />
-                <span asp-validation-for="nombreSuscripcion" class="text-danger"></span>
+                <label asp-for="NombreSuscripcion" class="form-label">Nombre</label>
+                <input asp-for="NombreSuscripcion" class="form-control" />
+                <span asp-validation-for="NombreSuscripcion" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="emailSuscripcion" class="form-label">Correo Electrónico</label>
-                <input asp-for="emailSuscripcion" type="email" class="form-control" />
-                <span asp-validation-for="emailSuscripcion" class="text-danger"></span>
+                <label asp-for="EmailSuscripcion" class="form-label">Correo Electrónico</label>
+                <input asp-for="EmailSuscripcion" type="email" class="form-control" />
+                <span asp-validation-for="EmailSuscripcion" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="fechaSuscripcion" class="form-label">Fecha</label>
-                <input asp-for="fechaSuscripcion" type="date" class="form-control" />
-                <span asp-validation-for="fechaSuscripcion" class="text-danger"></span>
+                <label asp-for="FechaSuscripcion" class="form-label">Fecha</label>
+                <input asp-for="FechaSuscripcion" type="date" class="form-control" />
+                <span asp-validation-for="FechaSuscripcion" class="text-danger"></span>
             </div>
 
             <div class="mb-4">

@@ -1,4 +1,4 @@
-@model enso_Certamen.Models.comentarioGeneral
+@model enso_Certamen.Models.ComentarioGeneral
 @{
     ViewData["Title"] = "Crear Comentario";
 }
@@ -11,27 +11,27 @@
             @Html.AntiForgeryToken()
 
             <div class="mb-3">
-                <label asp-for="nombrelectorComentario" class="form-label">Nombre del lector</label>
-                <input asp-for="nombrelectorComentario" class="form-control" placeholder="Ej: Juan Pérez" />
-                <span asp-validation-for="nombrelectorComentario" class="text-danger"></span>
+                <label asp-for="NombrelectorComentario" class="form-label">Nombre del lector</label>
+                <input asp-for="NombrelectorComentario" class="form-control" placeholder="Ej: Juan Pérez" />
+                <span asp-validation-for="NombrelectorComentario" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="emailLectorComentario" class="form-label">Email del lector</label>
-                <input asp-for="emailLectorComentario" type="email" class="form-control" placeholder="Ej: juan@example.com" />
-                <span asp-validation-for="emailLectorComentario" class="text-danger"></span>
+                <label asp-for="EmailLectorComentario" class="form-label">Email del lector</label>
+                <input asp-for="EmailLectorComentario" type="email" class="form-control" placeholder="Ej: juan@example.com" />
+                <span asp-validation-for="EmailLectorComentario" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="contenidoComentario" class="form-label">Contenido</label>
-                <textarea asp-for="contenidoComentario" class="form-control" rows="4" placeholder="Escribe aquí tu comentario..."></textarea>
-                <span asp-validation-for="contenidoComentario" class="text-danger"></span>
+                <label asp-for="ContenidoComentario" class="form-label">Contenido</label>
+                <textarea asp-for="ContenidoComentario" class="form-control" rows="4" placeholder="Escribe aquí tu comentario..."></textarea>
+                <span asp-validation-for="ContenidoComentario" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="fechaComentario" class="form-label">Fecha</label>
-                <input asp-for="fechaComentario" type="date" class="form-control" />
-                <span asp-validation-for="fechaComentario" class="text-danger"></span>
+                <label asp-for="FechaComentario" class="form-label">Fecha</label>
+                <input asp-for="FechaComentario" type="date" class="form-control" />
+                <span asp-validation-for="FechaComentario" class="text-danger"></span>
             </div>
 
             <div class="mb-3">

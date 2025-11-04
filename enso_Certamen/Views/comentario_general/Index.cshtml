@@ -1,4 +1,4 @@
-@model IEnumerable<enso_Certamen.Models.comentarioGeneral>
+@model IEnumerable<enso_Certamen.Models.ComentarioGeneral>
 @{
     ViewData["Title"] = "Comentarios";
 }
@@ -37,17 +37,17 @@
                 foreach (var item in Model)
                 {
                     <tr>
-                        <td>@item.nombrelectorComentario</td>
-                        <td>@item.emailLectorComentario</td>
+                        <td>@item.NombrelectorComentario</td>
+                        <td>@item.EmailLectorComentario</td>
                         <td>
                             @{
-                                var texto = item.contenidoComentario ?? string.Empty;
+                                var texto = item.ContenidoComentario ?? string.Empty;
                                 var preview = texto.Length > 100 ? texto.Substring(0, 100) + "…" : texto;
                             }
                             @preview
                         </td>
-                        <td>@item.fechaComentario.ToString("yyyy-MM-dd")</td>
-                        <td>@(item.GuidNoticiaNavigation?.tituloNoticia?? "Sin Noticia")</td>
+                        <td>@item.FechaComentario.ToString("yyyy-MM-dd")</td>
+                        <td>@(item.GuidNoticiaNavigation?.TituloNoticia?? "Sin Noticia")</td>
                         <td class="text-end">
                             <a asp-action="Edit" asp-route-id="@item.GuidComentario" class="btn btn-sm btn-primary">Editar</a>
                             <a asp-action="Delete" asp-route-id="@item.GuidComentario" class="btn btn-sm btn-danger ms-1">Eliminar</a>

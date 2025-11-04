@@ -1,4 +1,4 @@
-@model enso_Certamen.Models.noticiaGeneral
+@model enso_Certamen.Models.NoticiaGeneral
 @{
     ViewData["Title"] = "Editar Noticia";
 }
@@ -12,27 +12,27 @@
             <input type="hidden" asp-for="GuidNoticia" />
 
             <div class="mb-3">
-                <label asp-for="tituloNoticia" class="form-label">Título</label>
-                <input asp-for="tituloNoticia" class="form-control" />
-                <span asp-validation-for="tituloNoticia" class="text-danger"></span>
+                <label asp-for="TituloNoticia" class="form-label">Título</label>
+                <input asp-for="TituloNoticia" class="form-control" />
+                <span asp-validation-for="TituloNoticia" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="resumenNoticia" class="form-label">Resumen</label>
-                <textarea asp-for="resumenNoticia" class="form-control" rows="3"></textarea>
-                <span asp-validation-for="resumenNoticia" class="text-danger"></span>
+                <label asp-for="ResumenNoticia" class="form-label">Resumen</label>
+                <textarea asp-for="ResumenNoticia" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="ResumenNoticia" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="contenidoNoticia" class="form-label">Contenido</label>
-                <textarea asp-for="contenidoNoticia" class="form-control" rows="6"></textarea>
-                <span asp-validation-for="contenidoNoticia" class="text-danger"></span>
+                <label asp-for="ContenidoNoticia" class="form-label">Contenido</label>
+                <textarea asp-for="ContenidoNoticia" class="form-control" rows="6"></textarea>
+                <span asp-validation-for="ContenidoNoticia" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="fechaNoticia" class="form-label">Fecha</label>
-                <input asp-for="fechaNoticia" type="date" class="form-control" />
-                <span asp-validation-for="fechaNoticia" class="text-danger"></span>
+                <label asp-for="FechaNoticia" class="form-label">Fecha</label>
+                <input asp-for="FechaNoticia" type="date" class="form-control" />
+                <span asp-validation-for="FechaNoticia" class="text-danger"></span>
             </div>
 
             <div class="mb-4">

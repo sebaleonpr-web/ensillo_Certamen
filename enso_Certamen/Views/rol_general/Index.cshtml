@@ -1,8 +1,8 @@
-@model IEnumerable<enso_Certamen.Models.rolGeneral>
+@model IEnumerable<enso_Certamen.Models.RolGeneral>
 
 @{
     ViewData["Title"] = "Roles";
-    var roles = Model ?? new List<enso_Certamen.Models.rolGeneral>(); // evita null
+    var roles = Model ?? new List<enso_Certamen.Models.RolGeneral>(); // evita null
 }
 
 <div class="container py-4">
@@ -35,8 +35,8 @@
                     foreach (var item in roles)
                     {
                         <tr>
-                            <td>@item.nombreRol</td>
-                            <td>@item.descripRol</td>
+                            <td>@item.NombreRol</td>
+                            <td>@item.DescripRol</td>
                             <td class="text-end">
                                 <a asp-action="Edit" asp-route-id="@item.GuidRol" class="btn btn-sm btn-primary">Editar</a>
                                 <a asp-action="Delete" asp-route-id="@item.GuidRol" class="btn btn-sm btn-danger ms-1">Eliminar</a>

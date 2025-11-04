@@ -5,14 +5,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using enso_Certamen.Models;
+using enso_Certamen.Data;
 
 namespace enso_Certamen.Controllers
 {
     public class boletin_generalController : Controller
     {
-        private readonly boletinLayonContext _db;
+        private readonly BoletinLayonContext _db;
 
-        public boletin_generalController(boletinLayonContext db)
+        public boletin_generalController(BoletinLayonContext db)
         {
             _db = db;
         }
@@ -34,7 +35,7 @@ namespace enso_Certamen.Controllers
         //Tabla de boletines, Index.cshtml        //Carga la lista de boletines ordenados por fecha descendente
         public async Task<IActionResult> Index()
         {
-            var lista = await _db.boletinGenerals
+            var lista = await _db.BoletinGenerals
                 .AsNoTracking()
                 .Include(b => b.GuidNoticiaNavigation) // 🔹 carga la noticia vinculada
                 .OrderByDescending(b => b.FechaBoletin)
@@ -51,9 +52,9 @@ namespace enso_Certamen.Controllers
         public IActionResult Create()
         {
             ViewBag.Noticias = new SelectList(
-                _db.noticiaGenerals
+                _db.NoticiaGenerals
                 .OrderBy(n => n.GuidNoticia)
-                .Select(n => new { n.GuidNoticia, Texto = n.tituloNoticia.ToString() }),
+                .Select(n => new { n.GuidNoticia, Texto = n.TituloNoticia.ToString() }),
                 "GuidNoticia", "Texto"
             );
             return View("~/Views/boletin_general/Create.cshtml");
@@ -67,7 +68,7 @@ namespace enso_Certamen.Controllers
         [ValidateAntiForgeryToken]
         //Definir los campos que se van a bindear
         //Campos definidos en el modelo BoletinGeneral.cs
-        public async Task<IActionResult> Create([Bind("TituloBoletin,DescripcionBoletin,FechaBoletin,GuidNoticia")] boletinGeneral model)
+        public async Task<IActionResult> Create([Bind("TituloBoletin,DescripcionBoletin,FechaBoletin,GuidNoticia")] BoletinGeneral model)
         {
 
             if (model.FechaBoletin == default)
@@ -81,16 +82,16 @@ namespace enso_Certamen.Controllers
             {
                 //Recargar el combo de noticias si hay error
                 ViewBag.Noticias = new SelectList(
-                _db.noticiaGenerals
+                _db.NoticiaGenerals
                     .AsNoTracking()
-                    .OrderBy(n => n.tituloNoticia)
-                    .Select(n => new { n.GuidNoticia, Texto = n.tituloNoticia }),
+                    .OrderBy(n => n.TituloNoticia)
+                    .Select(n => new { n.GuidNoticia, Texto = n.TituloNoticia }),
                 "GuidNoticia", "Texto", model.GuidNoticia
 );
                 return View("~/Views/boletin_general/Create.cshtml", model);
             }
             //Agregar un nuevo boletin
-            _db.boletinGenerals.Add(model);
+            _db.BoletinGenerals.Add(model);
             //Se sincroniza con la base de datos
             //Confirma que se guarda
             await _db.SaveChangesAsync();
@@ -107,13 +108,13 @@ namespace enso_Certamen.Controllers
             //Si es nulo retorna no encontrado
             if (id == null) return NotFound();
             //Buscar el boletin por id en la database
-            var entidad = await _db.boletinGenerals.FindAsync(id);
+            var entidad = await _db.BoletinGenerals.FindAsync(id);
             if (entidad == null) return NotFound();
             //Cargar el combo de noticias
             ViewBag.Noticias = new SelectList(
-                _db.noticiaGenerals
+                _db.NoticiaGenerals
                 .OrderBy(n => n.GuidNoticia)
-                .Select(n => new { n.GuidNoticia, Texto = n.tituloNoticia.ToString() }),
+                .Select(n => new { n.GuidNoticia, Texto = n.TituloNoticia.ToString() }),
                 "GuidNoticia", "Texto", entidad.GuidNoticia
             );
             //Retornar la vista Edit.cshtml con la entidad encontrada
@@ -129,7 +130,7 @@ namespace enso_Certamen.Controllers
         //Definir los campos que se van a bindear
         //Campos definidos en el modelo BoletinGeneral.cs
         //ID RETORNADO DEL URL, asp-route-id=@item.GuidBoletin
-        public async Task<IActionResult> Edit(Guid id, [Bind("GuidBoletin,TituloBoletin,DescripcionBoletin,FechaBoletin,GuidNoticia")] boletinGeneral model)
+        public async Task<IActionResult> Edit(Guid id, [Bind("GuidBoletin,TituloBoletin,DescripcionBoletin,FechaBoletin,GuidNoticia")] BoletinGeneral model)
         {
             ValidarFecha(model.FechaBoletin, nameof(model.FechaBoletin));
 
@@ -139,9 +140,9 @@ namespace enso_Certamen.Controllers
             {
                 //Recargar el combo de noticias si hay error
                 ViewBag.Noticias = new SelectList(
-                    _db.noticiaGenerals
+                    _db.NoticiaGenerals
                     .OrderBy(n => n.GuidNoticia)
-                    .Select(n => new { n.GuidNoticia, Texto = n.tituloNoticia.ToString() }),
+                    .Select(n => new { n.GuidNoticia, Texto = n.TituloNoticia.ToString() }),
                     "GuidNoticia", "tituloNoticia", model.GuidNoticia
                 );
                 //Retornar la vista Edit.cshtml con el modelo
@@ -166,7 +167,7 @@ namespace enso_Certamen.Controllers
                 //Si no existe retorna no encontrado
                 //Da booleano
                 //Existe o no existe
-                var existe = await _db.boletinGenerals.AnyAsync(b => b.GuidBoletin == model.GuidBoletin);
+                var existe = await _db.BoletinGenerals.AnyAsync(b => b.GuidBoletin == model.GuidBoletin);
                 if (!existe) return NotFound();
                 //Si existe lanza la excepcion
                 //Nos devuelve al catch
@@ -186,7 +187,7 @@ namespace enso_Certamen.Controllers
             //Si el id es nulo retorna no encontrado
             if (id == null) return NotFound();
             //Buscar el boletin por id en la database
-            var entidad = await _db.boletinGenerals
+            var entidad = await _db.BoletinGenerals
                 .Include(b => b.GuidNoticiaNavigation) 
                 .FirstOrDefaultAsync(b => b.GuidBoletin == id);
 
@@ -203,7 +204,7 @@ namespace enso_Certamen.Controllers
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             //Buscar el boletin por id en la database
-        var entidad = await _db.boletinGenerals
+        var entidad = await _db.BoletinGenerals
             .Include(b => b.GuidNoticiaNavigation) // 👈 carga la relación
             .FirstOrDefaultAsync(b => b.GuidBoletin == id);
 
@@ -211,7 +212,7 @@ namespace enso_Certamen.Controllers
             if (entidad != null)
             {
                 //Eliminar el boletin
-                _db.boletinGenerals.Remove(entidad);
+                _db.BoletinGenerals.Remove(entidad);
                 //Guardar los cambios en la base de datos
                 await _db.SaveChangesAsync();
             }

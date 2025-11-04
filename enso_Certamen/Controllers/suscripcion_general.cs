@@ -5,14 +5,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using enso_Certamen.Models;
+using enso_Certamen.Data;
 
 namespace enso_Certamen.Controllers
 {
     public class suscripcion_generalController : Controller
     {
-        private readonly boletinLayonContext _db;
+        private readonly BoletinLayonContext _db;
 
-        public suscripcion_generalController(boletinLayonContext db)
+        public suscripcion_generalController(BoletinLayonContext db)
         {
             _db = db;
         }
@@ -33,10 +34,10 @@ namespace enso_Certamen.Controllers
         // Tabla de suscripciones, Index.cshtml — Carga la lista ordenada por fecha desc
         public async Task<IActionResult> Index()
         {
-            var lista = await _db.suscripcionGenerals
+            var lista = await _db.SuscripcionGenerals
                 .AsNoTracking()
                 .Include(s => s.GuidBoletinNavigation) // 🔹 por si la vista muestra el título del boletín
-                .OrderByDescending(s => s.fechaSuscripcion)
+                .OrderByDescending(s => s.FechaSuscripcion)
                 .ToListAsync();
 
             return View("~/Views/suscripcion_general/Index.cshtml", lista);
@@ -47,7 +48,7 @@ namespace enso_Certamen.Controllers
         public IActionResult Create()
         {
             ViewBag.Boletines = new SelectList(
-                _db.boletinGenerals
+                _db.BoletinGenerals
                 .AsNoTracking()
                 .OrderBy(b => b.TituloBoletin)
                 .Select(b => new { b.GuidBoletin, Texto = b.TituloBoletin }),
@@ -60,14 +61,14 @@ namespace enso_Certamen.Controllers
         // POST: /suscripcion_general/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("nombreSuscripcion,emailSuscripcion,fechaSuscripcion,GuidBoletin")] suscripcionGeneral model)
+        public async Task<IActionResult> Create([Bind("nombreSuscripcion,emailSuscripcion,fechaSuscripcion,GuidBoletin")] SuscripcionGeneral model)
         {
-            ValidarFecha(model.fechaSuscripcion, nameof(model.fechaSuscripcion));
+            ValidarFecha(model.FechaSuscripcion, nameof(model.FechaSuscripcion));
 
             if (!ModelState.IsValid)
             {
                 ViewBag.Boletines = new SelectList(
-                    _db.boletinGenerals
+                    _db.BoletinGenerals
                     .AsNoTracking()
                     .OrderBy(b => b.TituloBoletin)
                     .Select(b => new { b.GuidBoletin, Texto = b.TituloBoletin }),
@@ -80,7 +81,7 @@ namespace enso_Certamen.Controllers
             if (model.GuidSuscripcion == Guid.Empty)
                 model.GuidSuscripcion = Guid.NewGuid();
 
-            _db.suscripcionGenerals.Add(model);
+            _db.SuscripcionGenerals.Add(model);
             await _db.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
@@ -92,11 +93,11 @@ namespace enso_Certamen.Controllers
         {
             if (id == null) return NotFound();
 
-            var entidad = await _db.suscripcionGenerals.FindAsync(id.Value);
+            var entidad = await _db.SuscripcionGenerals.FindAsync(id.Value);
             if (entidad == null) return NotFound();
 
             ViewBag.Boletines = new SelectList(
-                _db.boletinGenerals
+                _db.BoletinGenerals
                 .AsNoTracking()
                 .OrderBy(b => b.TituloBoletin)
                 .Select(b => new { b.GuidBoletin, Texto = b.TituloBoletin }),
@@ -109,16 +110,16 @@ namespace enso_Certamen.Controllers
         // POST: /suscripcion_general/Edit/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("GuidSuscripcion,nombreSuscripcion,emailSuscripcion,fechaSuscripcion,GuidBoletin")] suscripcionGeneral model)
+        public async Task<IActionResult> Edit(Guid id, [Bind("GuidSuscripcion,nombreSuscripcion,emailSuscripcion,fechaSuscripcion,GuidBoletin")] SuscripcionGeneral model)
         {
-            ValidarFecha(model.fechaSuscripcion, nameof(model.fechaSuscripcion));
+            ValidarFecha(model.FechaSuscripcion, nameof(model.FechaSuscripcion));
 
             if (id != model.GuidSuscripcion) return NotFound();
 
             if (!ModelState.IsValid)
             {
                 ViewBag.Boletines = new SelectList(
-                    _db.boletinGenerals
+                    _db.BoletinGenerals
                     .AsNoTracking()
                     .OrderBy(b => b.TituloBoletin)
                     .Select(b => new { b.GuidBoletin, Texto = b.TituloBoletin }),
@@ -135,7 +136,7 @@ namespace enso_Certamen.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                var existe = await _db.suscripcionGenerals.AnyAsync(s => s.GuidSuscripcion == model.GuidSuscripcion);
+                var existe = await _db.SuscripcionGenerals.AnyAsync(s => s.GuidSuscripcion == model.GuidSuscripcion);
                 if (!existe) return NotFound();
                 throw; // mismo criterio que tu boletin_generalController
             }
@@ -148,7 +149,7 @@ namespace enso_Certamen.Controllers
         {
             if (id == null) return NotFound();
 
-            var entidad = await _db.suscripcionGenerals
+            var entidad = await _db.SuscripcionGenerals
                 .AsNoTracking()
                 .Include(s => s.GuidBoletinNavigation)
                 .FirstOrDefaultAsync(s => s.GuidSuscripcion == id.Value);
@@ -163,10 +164,10 @@ namespace enso_Certamen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var entidad = await _db.suscripcionGenerals.FindAsync(id);
+            var entidad = await _db.SuscripcionGenerals.FindAsync(id);
             if (entidad != null)
             {
-                _db.suscripcionGenerals.Remove(entidad);
+                _db.SuscripcionGenerals.Remove(entidad);
                 await _db.SaveChangesAsync();
             }
 

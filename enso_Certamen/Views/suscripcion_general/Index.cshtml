@@ -1,4 +1,4 @@
-@model IEnumerable<enso_Certamen.Models.suscripcionGeneral>
+@model IEnumerable<enso_Certamen.Models.SuscripcionGeneral>
 @{
     ViewData["Title"] = "Suscripciones";
 }
@@ -36,9 +36,9 @@
                 foreach (var item in Model)
                 {
                     <tr>
-                        <td>@item.nombreSuscripcion</td>
-                        <td>@item.emailSuscripcion</td>
-                        <td>@item.fechaSuscripcion.ToString("yyyy-MM-dd")</td>
+                        <td>@item.NombreSuscripcion</td>
+                        <td>@item.EmailSuscripcion</td>
+                        <td>@item.FechaSuscripcion.ToString("yyyy-MM-dd")</td>
                         <td>@(item.GuidBoletinNavigation?.TituloBoletin??"Sin Noticia")</td>
                         <td class="text-end">
                             <a asp-action="Edit" asp-route-id="@item.GuidSuscripcion" class="btn btn-sm btn-primary">Editar</a>

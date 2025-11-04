@@ -1,4 +1,4 @@
-@model IEnumerable<enso_Certamen.Models.noticiaGeneral>
+@model IEnumerable<enso_Certamen.Models.NoticiaGeneral>
 @{
     ViewData["Title"] = "Noticias";
 }
@@ -37,11 +37,11 @@
                 foreach (var item in Model)
                 {
                     <tr>
-                        <td>@item.tituloNoticia</td>
-                        <td>@item.resumenNoticia</td>
-                        <td>@item.contenidoNoticia</td>
-                        <td>@item.fechaNoticia.ToString("yyyy-MM-dd")</td>
-                        <td>@(item.GuidUsuarioNavigation?.nombreUser ?? "Sin Usuario")</td>
+                        <td>@item.TituloNoticia</td>
+                        <td>@item.ResumenNoticia</td>
+                        <td>@item.ContenidoNoticia</td>
+                        <td>@item.FechaNoticia.ToString("yyyy-MM-dd")</td>
+                        <td>@(item.GuidUsuarioNavigation?.NombreUser ?? "Sin Usuario")</td>
                         <td class="text-end">
                             <a asp-action="Edit" asp-route-id="@item.GuidNoticia" class="btn btn-sm btn-primary">Editar</a>
                             <a asp-action="Delete" asp-route-id="@item.GuidNoticia" class="btn btn-sm btn-danger ms-1">Eliminar</a>

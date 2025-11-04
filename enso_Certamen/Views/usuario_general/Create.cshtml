@@ -1,4 +1,4 @@
-@model enso_Certamen.Models.usuariosGeneral
+@model enso_Certamen.Models.UsuariosGeneral
 @{
     ViewData["Title"] = "Crear Usuario";
 }
@@ -11,28 +11,28 @@
             @Html.AntiForgeryToken()
 
             <div class="mb-3">
-                <label asp-for="nombreUser" class="form-label">Nombre</label>
-                <input asp-for="nombreUser" class="form-control" placeholder="Ej: Sebastián" />
-                <span asp-validation-for="nombreUser" class="text-danger"></span>
+                <label asp-for="NombreUser" class="form-label">Nombre</label>
+                <input asp-for="NombreUser" class="form-control" placeholder="Ej: Sebastián" />
+                <span asp-validation-for="NombreUser" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="apellidoUser" class="form-label">Apellido</label>
-                <input asp-for="apellidoUser" class="form-control" placeholder="Ej: León" />
-                <span asp-validation-for="apellidoUser" class="text-danger"></span>
+                <label asp-for="ApellidoUser" class="form-label">Apellido</label>
+                <input asp-for="ApellidoUser" class="form-control" placeholder="Ej: León" />
+                <span asp-validation-for="ApellidoUser" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="emailUser" class="form-label">Correo Electrónico</label>
-                <input asp-for="emailUser" type="email" class="form-control" placeholder="Ej: usuario@correo.com" />
-                <span asp-validation-for="emailUser" class="text-danger"></span>
+                <label asp-for="EmailUser" class="form-label">Correo Electrónico</label>
+                <input asp-for="EmailUser" type="email" class="form-control" placeholder="Ej: usuario@correo.com" />
+                <span asp-validation-for="EmailUser" class="text-danger"></span>
             </div>
 
             <!-- === NUEVO: Contraseña obligatoria en Create === -->
             <div class="mb-3">
-            <label asp-for="contraUser" class="form-label">Contraseña</label>
-            <input asp-for="contraUser" type="password" class="form-control" />
-            <span asp-validation-for="contraUser" class="text-danger"></span>
+            <label asp-for="ContraUser" class="form-label">Contraseña</label>
+            <input asp-for="ContraUser" type="password" class="form-control" />
+            <span asp-validation-for="ContraUser" class="text-danger"></span>
             </div>
 
             <div class="mb-4">

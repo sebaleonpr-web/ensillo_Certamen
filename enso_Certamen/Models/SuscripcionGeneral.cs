@@ -1,33 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace enso_Certamen.Models;
 
-[Table("suscripcionGeneral")]
-public partial class suscripcionGeneral
+public partial class SuscripcionGeneral
 {
-    [Key]
     public Guid GuidSuscripcion { get; set; }
 
-    [Required(ErrorMessage = "El Nombre es obligatorio.")]
+    public string NombreSuscripcion { get; set; } = null!;
 
-    public string nombreSuscripcion { get; set; } = null!;
+    public string EmailSuscripcion { get; set; } = null!;
 
-    [EmailAddress(ErrorMessage = "El formato del correo no es válido.")]
-        [Required(ErrorMessage = "El Correo es obligatorio.")]
-
-    public string emailSuscripcion { get; set; } = null!;
-
-    [Required(ErrorMessage = "La fecha es obligatoria.")]
-    [Column(TypeName = "datetime")]
-    public DateTime fechaSuscripcion { get; set; }
+    public DateTime FechaSuscripcion { get; set; }
 
     public Guid? GuidBoletin { get; set; }
 
-    [ForeignKey("GuidBoletin")]
-    [InverseProperty("suscripcionGenerals")]
-    public virtual boletinGeneral? GuidBoletinNavigation { get; set; }
+    public virtual BoletinGeneral? GuidBoletinNavigation { get; set; }
 }

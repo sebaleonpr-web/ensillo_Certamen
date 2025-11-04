@@ -5,14 +5,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using enso_Certamen.Models;
+using enso_Certamen.Data;
 
 namespace enso_Certamen.Controllers
 {
     public class comentario_generalController : Controller
     {
-        private readonly boletinLayonContext _db;
+        private readonly BoletinLayonContext _db;
 
-        public comentario_generalController(boletinLayonContext db)
+        public comentario_generalController(BoletinLayonContext db)
         {
             _db = db;
         }
@@ -35,10 +36,10 @@ namespace enso_Certamen.Controllers
         // GET: /comentario_general
         public async Task<IActionResult> Index()
         {
-            var lista = await _db.comentarioGenerals
+            var lista = await _db.ComentarioGenerals
                 .AsNoTracking()
                 .Include(c => c.GuidNoticiaNavigation)
-                .OrderByDescending(c => c.fechaComentario)
+                .OrderByDescending(c => c.FechaComentario)
                 .ToListAsync();
 
             return View("~/Views/comentario_general/Index.cshtml", lista);
@@ -48,10 +49,10 @@ namespace enso_Certamen.Controllers
         public IActionResult Create()
         {
             ViewBag.Noticias = new SelectList(
-                _db.noticiaGenerals
+                _db.NoticiaGenerals
                 .AsNoTracking()
-                .OrderBy(n => n.tituloNoticia)
-                .Select(n => new { n.GuidNoticia, Texto = n.tituloNoticia }),
+                .OrderBy(n => n.TituloNoticia)
+                .Select(n => new { n.GuidNoticia, Texto = n.TituloNoticia }),
                 "GuidNoticia", "Texto"
             );
 
@@ -61,19 +62,19 @@ namespace enso_Certamen.Controllers
         // POST: /comentario_general/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("nombrelectorComentario,emailLectorComentario,contenidoComentario,fechaComentario,GuidNoticia")] comentarioGeneral model)
+        public async Task<IActionResult> Create([Bind("nombrelectorComentario,emailLectorComentario,contenidoComentario,fechaComentario,GuidNoticia")] ComentarioGeneral model)
         {
             // 👇 Normaliza el combo: Guid.Empty => null
             if (!model.GuidNoticia.HasValue || model.GuidNoticia.Value == Guid.Empty)
                 model.GuidNoticia = null;
 
-            ValidarFecha(model.fechaComentario, nameof(model.fechaComentario));
+            ValidarFecha(model.FechaComentario, nameof(model.FechaComentario));
             if (!ModelState.IsValid)
             {
                 ViewBag.Noticias = new SelectList(
-                    _db.noticiaGenerals.AsNoTracking()
-                        .OrderBy(n => n.tituloNoticia)
-                        .Select(n => new { n.GuidNoticia, Texto = n.tituloNoticia }),
+                    _db.NoticiaGenerals.AsNoTracking()
+                        .OrderBy(n => n.TituloNoticia)
+                        .Select(n => new { n.GuidNoticia, Texto = n.TituloNoticia }),
                     "GuidNoticia", "Texto", model.GuidNoticia
                 );
                 return View("~/Views/comentario_general/Create.cshtml", model);
@@ -82,7 +83,7 @@ namespace enso_Certamen.Controllers
             if (model.GuidComentario == Guid.Empty)
                 model.GuidComentario = Guid.NewGuid();
 
-            _db.comentarioGenerals.Add(model);
+            _db.ComentarioGenerals.Add(model);
             await _db.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -93,14 +94,14 @@ namespace enso_Certamen.Controllers
         {
             if (id == null) return NotFound();
 
-            var entidad = await _db.comentarioGenerals.FindAsync(id.Value);
+            var entidad = await _db.ComentarioGenerals.FindAsync(id.Value);
             if (entidad == null) return NotFound();
 
             ViewBag.Noticias = new SelectList(
-                _db.noticiaGenerals
+                _db.NoticiaGenerals
                 .AsNoTracking()
-                .OrderBy(n => n.tituloNoticia)
-                .Select(n => new { n.GuidNoticia, Texto = n.tituloNoticia }),
+                .OrderBy(n => n.TituloNoticia)
+                .Select(n => new { n.GuidNoticia, Texto = n.TituloNoticia }),
                 "GuidNoticia", "Texto", entidad.GuidNoticia
             );
 
@@ -110,21 +111,21 @@ namespace enso_Certamen.Controllers
         // POST: /comentario_general/Edit/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("GuidComentario,nombrelectorComentario,emailLectorComentario,contenidoComentario,fechaComentario,GuidNoticia")] comentarioGeneral model)
+        public async Task<IActionResult> Edit(Guid id, [Bind("GuidComentario,nombrelectorComentario,emailLectorComentario,contenidoComentario,fechaComentario,GuidNoticia")] ComentarioGeneral model)
         {
-            ValidarFecha(model.fechaComentario, nameof(model.fechaComentario));
+            ValidarFecha(model.FechaComentario, nameof(model.FechaComentario));
 
             if (id != model.GuidComentario) return NotFound();
-            ValidarFecha(model.fechaComentario);
+            ValidarFecha(model.FechaComentario);
             // 👇 Igual que en Create
             if (!model.GuidNoticia.HasValue || model.GuidNoticia.Value == Guid.Empty)
                 model.GuidNoticia = null;
             if (!ModelState.IsValid)
             {
                 ViewBag.Noticias = new SelectList(
-                    _db.noticiaGenerals.AsNoTracking()
-                        .OrderBy(n => n.tituloNoticia)
-                        .Select(n => new { n.GuidNoticia, Texto = n.tituloNoticia }),
+                    _db.NoticiaGenerals.AsNoTracking()
+                        .OrderBy(n => n.TituloNoticia)
+                        .Select(n => new { n.GuidNoticia, Texto = n.TituloNoticia }),
                     "GuidNoticia", "Texto", model.GuidNoticia
                 );
                 return View("~/Views/comentario_general/Edit.cshtml", model);
@@ -137,7 +138,7 @@ namespace enso_Certamen.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                var existe = await _db.comentarioGenerals.AnyAsync(c => c.GuidComentario == model.GuidComentario);
+                var existe = await _db.ComentarioGenerals.AnyAsync(c => c.GuidComentario == model.GuidComentario);
                 if (!existe) return NotFound();
                 throw;
             }
@@ -151,7 +152,7 @@ namespace enso_Certamen.Controllers
         {
             if (id == null) return NotFound();
 
-            var entidad = await _db.comentarioGenerals
+            var entidad = await _db.ComentarioGenerals
                 .AsNoTracking()
                 .Include(c => c.GuidNoticiaNavigation)
                 .FirstOrDefaultAsync(c => c.GuidComentario == id.Value);
@@ -166,10 +167,10 @@ namespace enso_Certamen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var entidad = await _db.comentarioGenerals.FindAsync(id);
+            var entidad = await _db.ComentarioGenerals.FindAsync(id);
             if (entidad != null)
             {
-                _db.comentarioGenerals.Remove(entidad);
+                _db.ComentarioGenerals.Remove(entidad);
                 await _db.SaveChangesAsync();
             }
             return RedirectToAction(nameof(Index));

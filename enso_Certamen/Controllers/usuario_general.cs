@@ -6,14 +6,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using enso_Certamen.Models;
+using enso_Certamen.Data;
 
 namespace enso_Certamen.Controllers
 {
     public class usuario_generalController : Controller
     {
-        private readonly boletinLayonContext _db;
+        private readonly BoletinLayonContext _db;
 
-        public usuario_generalController(boletinLayonContext db)
+        public usuario_generalController(BoletinLayonContext db)
         {
             _db = db;
         }
@@ -22,7 +23,7 @@ namespace enso_Certamen.Controllers
         // GET: /usuario_general
         public async Task<IActionResult> Index()
         {
-            var lista = await _db.usuariosGenerals
+            var lista = await _db.UsuariosGenerals
                                 .AsNoTracking()
                                 .Include(u => u.GuidRolNavigation) // si quieres mostrar el nombre del rol
                                 .OrderBy(u => u.GuidUsuario)
@@ -34,13 +35,13 @@ namespace enso_Certamen.Controllers
 
         private async Task CargarRolesAsync(Guid? seleccionado = null)
         {
-            var lista = await _db.rolGenerals
+            var lista = await _db.RolGenerals
                                 .AsNoTracking()
-                                .OrderBy(r => r.nombreRol)
+                                .OrderBy(r => r.NombreRol)
                                 .Select(r => new SelectListItem
                                 {
                                     Value    = r.GuidRol.ToString(),
-                                    Text     = r.nombreRol,
+                                    Text     = r.NombreRol,
                                     Selected = (seleccionado.HasValue && r.GuidRol == seleccionado.Value)
                                 })
                                 .ToListAsync();
@@ -59,15 +60,15 @@ namespace enso_Certamen.Controllers
         // POST: /usuario_general/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(usuariosGeneral model)
+        public async Task<IActionResult> Create(UsuariosGeneral model)
         {
             if (model.GuidRol == Guid.Empty) model.GuidRol = null;
             if (model.GuidUsuario == Guid.Empty) model.GuidUsuario = Guid.NewGuid();
 
             // === NUEVO: exigir contraseña en Create ===
-            if (string.IsNullOrWhiteSpace(model.contraUser))
+            if (string.IsNullOrWhiteSpace(model.ContraUser))
             {
-                ModelState.AddModelError(nameof(model.contraUser), "La contraseña es obligatoria.");
+                ModelState.AddModelError(nameof(model.ContraUser), "La contraseña es obligatoria.");
             }
 
             if (!ModelState.IsValid)
@@ -76,7 +77,7 @@ namespace enso_Certamen.Controllers
                 return View("~/Views/usuario_general/Create.cshtml", model);
             }
 
-            _db.usuariosGenerals.Add(model);
+            _db.UsuariosGenerals.Add(model);
             await _db.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -86,7 +87,7 @@ namespace enso_Certamen.Controllers
         {
             if (id == null) return NotFound();
 
-            var entidad = await _db.usuariosGenerals.FindAsync(id);
+            var entidad = await _db.UsuariosGenerals.FindAsync(id);
             if (entidad == null) return NotFound();
 
             await CargarRolesAsync(entidad.GuidRol);
@@ -96,12 +97,12 @@ namespace enso_Certamen.Controllers
         // POST: /usuario_general/Edit/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, usuariosGeneral model)
+        public async Task<IActionResult> Edit(Guid id, UsuariosGeneral model)
         {
             if (id != model.GuidUsuario) return NotFound();
 
             // Cargar la entidad existente
-            var entidad = await _db.usuariosGenerals
+            var entidad = await _db.UsuariosGenerals
                                 .FirstOrDefaultAsync(u => u.GuidUsuario == id);
             if (entidad == null) return NotFound();
 
@@ -114,14 +115,14 @@ namespace enso_Certamen.Controllers
                 return View("~/Views/usuario_general/Edit.cshtml", model);
             }
 
-            entidad.nombreUser   = model.nombreUser;
-            entidad.apellidoUser = model.apellidoUser;
-            entidad.emailUser    = model.emailUser;
+            entidad.NombreUser   = model.NombreUser;
+            entidad.ApellidoUser = model.ApellidoUser;
+            entidad.EmailUser    = model.EmailUser;
             entidad.GuidRol      = guidRol;
 
-            if (!string.IsNullOrWhiteSpace(model.contraUser))
+            if (!string.IsNullOrWhiteSpace(model.ContraUser))
             {
-                entidad.contraUser = model.contraUser;
+                entidad.ContraUser = model.ContraUser;
             }
 
             await _db.SaveChangesAsync();
@@ -133,7 +134,7 @@ namespace enso_Certamen.Controllers
         {
             if (id == null) return NotFound();
 
-            var entidad = await _db.usuariosGenerals.FindAsync(id);
+            var entidad = await _db.UsuariosGenerals.FindAsync(id);
             if (entidad == null) return NotFound();
 
             return View("~/Views/usuario_general/Delete.cshtml", entidad);
@@ -144,10 +145,10 @@ namespace enso_Certamen.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var entidad = await _db.usuariosGenerals.FindAsync(id);
+            var entidad = await _db.UsuariosGenerals.FindAsync(id);
             if (entidad != null)
             {
-                var noticias = await _db.noticiaGenerals
+                var noticias = await _db.NoticiaGenerals
                                         .Where(n => n.GuidUsuario == id)
                                         .ToListAsync();
                 if (noticias.Count > 0)
@@ -158,7 +159,7 @@ namespace enso_Certamen.Controllers
                     await _db.SaveChangesAsync(); // guardar primero la desasociación
                 }
 
-                _db.usuariosGenerals.Remove(entidad);
+                _db.UsuariosGenerals.Remove(entidad);
                 await _db.SaveChangesAsync();
             }
             return RedirectToAction(nameof(Index));
